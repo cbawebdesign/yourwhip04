@@ -79,3 +79,6 @@ export const COLORS = {
   white: '#fff',
   lightGray: '#C4C4C4',
 };
+
+// ONESIGNAL APP ID
+export const ONESIGNAL_APP_ID = '6f1c3120-be92-468e-b65c-15a462b97dd1';

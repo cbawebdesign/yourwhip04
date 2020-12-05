@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "428931231876",
+    "project_id": "yourwhip-284e6",
+    "storage_bucket": "yourwhip-284e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428931231876:android:8cbd785432b59b3da792d1",
+        "android_client_info": {
+          "package_name": "com.cba.yourwhip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "428931231876-rm8ofb6j92fgm3otcaovcst15mgaek55.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9iUy1r1TUvPClJngSVb6EXZjRnhNkWlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "428931231876-rm8ofb6j92fgm3otcaovcst15mgaek55.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

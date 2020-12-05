@@ -75,6 +75,7 @@ const ContainerView = ({
           colors={BG_COLOR}
           start={[0, 0]}
           end={[1, 1]}
+          focusable={false}
         >
           {loadingOptions && loadingOptions.loading && (
             <LoadingView hideSpinner={loadingOptions.hideSpinner} />
