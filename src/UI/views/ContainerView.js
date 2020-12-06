@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  View,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
@@ -45,17 +46,19 @@ const ContainerView = ({
         disabled={!touchEnabled}
         style={styles.container}
       >
-        <LinearGradient
-          style={[styles.gradientView, { paddingTop: headerHeight }]}
-          colors={BG_COLOR}
-          start={[0, 0]}
-          end={[1, 1]}
-        >
-          {loadingOptions && loadingOptions.loading && (
-            <LoadingView hideSpinner={loadingOptions.hideSpinner} />
-          )}
-          {children}
-        </LinearGradient>
+        <View style={{ flex: 1 }}>
+          <LinearGradient
+            style={[styles.gradientView, { paddingTop: headerHeight }]}
+            colors={BG_COLOR}
+            start={[0, 0]}
+            end={[1, 1]}
+          >
+            {loadingOptions && loadingOptions.loading && (
+              <LoadingView hideSpinner={loadingOptions.hideSpinner} />
+            )}
+            {children}
+          </LinearGradient>
+        </View>
       </TouchableWithoutFeedback>
     );
   }
@@ -70,18 +73,19 @@ const ContainerView = ({
         disabled={!touchEnabled}
         style={styles.container}
       >
-        <LinearGradient
-          style={[styles.gradientView, { paddingTop: headerHeight }]}
-          colors={BG_COLOR}
-          start={[0, 0]}
-          end={[1, 1]}
-          focusable={false}
-        >
-          {loadingOptions && loadingOptions.loading && (
-            <LoadingView hideSpinner={loadingOptions.hideSpinner} />
-          )}
-          {children}
-        </LinearGradient>
+        <View style={{ flex: 1 }}>
+          <LinearGradient
+            style={[styles.gradientView, { paddingTop: headerHeight }]}
+            colors={BG_COLOR}
+            start={[0, 0]}
+            end={[1, 1]}
+          >
+            {loadingOptions && loadingOptions.loading && (
+              <LoadingView hideSpinner={loadingOptions.hideSpinner} />
+            )}
+            {children}
+          </LinearGradient>
+        </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );

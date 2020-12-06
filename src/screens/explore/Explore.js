@@ -5,6 +5,7 @@ import { useDispatch, connect } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { debounce } from 'throttle-debounce';
 import { AnimatedFlatList, AnimationType } from 'flatlist-intro-animations';
+import OneSignal from 'react-native-onesignal';
 
 import ContainerView from '../../UI/views/ContainerView';
 import PhotoModal from '../../UI/modals/PhotoModal';
@@ -385,6 +386,27 @@ const Explore = ({
   };
   const handleLoadMoreThrottled = useRef(debounce(500, handleLoadMore)).current;
 
+  const getNotificationPermissions = async (updatePermissions) => {
+    const showStatus = (status) => {
+      if (!status.hasPrompted) {
+        OneSignal.registerForPushNotifications();
+      }
+      // if (
+      //   settingsState.notificationsEnabled === status.userSubscriptionEnabled
+      // ) {
+      //   return settingsState;
+      // } else if (updatePermissions) {
+      //   OneSignal.setSubscription(settingsState.notificationsEnabled);
+      // } else {
+      //   dispatch(setNotificationsPermissions(status.userSubscriptionEnabled));
+      // }
+
+      return status;
+    };
+
+    OneSignal.getPermissionSubscriptionState(showStatus);
+  };
+
   const renderItem = ({ item }) => (
     <ExploreListItem
       item={item}
@@ -449,6 +471,9 @@ const Explore = ({
     if (deletedPost) {
       return;
     }
+
+    // EXPLORE INIT
+    getNotificationPermissions();
     setFeed(homeFeed);
 
     // DO UPDATE CHECK AFTER RETURNING FROM COMMENT SCREEN

@@ -21,6 +21,7 @@ const SettingsListItem = ({
   const [userSettings, setUserSettings] = useState({
     enableSuggestions: false,
     enableIntroAnimations: false,
+    enableNotifications: false,
   });
 
   const renderRightSideItem = () => {
@@ -58,7 +59,24 @@ const SettingsListItem = ({
               toggleSettings(settingsCopy);
               setUserSettings(settingsCopy);
             }}
-            value={userSettings.enableIntroAnimations}
+            value={userSettings.enableIntronimations}
+          />
+        );
+      case 'ENABLE_NOTIFICATIONS':
+        return (
+          <Switch
+            trackColor={{
+              false: styles.$inactiveBackground,
+              true: styles.$activeBackground,
+            }}
+            onValueChange={(value) => {
+              const settingsCopy = { ...userSettings };
+              settingsCopy.enableNotifications = value;
+
+              toggleSettings(settingsCopy);
+              setUserSettings(settingsCopy);
+            }}
+            value={userSettings.enableNotifications}
           />
         );
       case 'SOCIAL':
@@ -79,6 +97,7 @@ const SettingsListItem = ({
       ...prev,
       enableSuggestions: settingsValue.enableSuggestions,
       enableIntroAnimations: settingsValue.enableIntroAnimations,
+      enableNotifications: settingsValue.enableNotifications,
     }));
   }, []);
 
@@ -104,9 +123,11 @@ SettingsListItem.defaultProps = {
   bottomMargin: false,
   hide: false,
 };
+
 SettingsListItem.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
+    type: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     icon: PropTypes.number.isRequired,
     navigateTo: PropTypes.string,
@@ -116,6 +137,7 @@ SettingsListItem.propTypes = {
   settingsValue: PropTypes.shape({
     enableIntroAnimations: PropTypes.bool.isRequired,
     enableSuggestions: PropTypes.bool.isRequired,
+    enableNotifications: PropTypes.bool.isRequired,
   }).isRequired,
   toggleSettings: PropTypes.func.isRequired,
   bottomMargin: PropTypes.bool,

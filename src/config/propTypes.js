@@ -35,6 +35,7 @@ export const userPropType = PropTypes.shape({
 export const userSettingsPropType = PropTypes.shape({
   enableSuggestions: PropTypes.bool.isRequired,
   enableIntroAnimations: PropTypes.bool.isRequired,
+  enableNotifications: PropTypes.bool.isRequired,
 });
 
 // SOCIAL

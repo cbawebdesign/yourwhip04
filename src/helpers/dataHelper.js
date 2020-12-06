@@ -86,6 +86,7 @@ const password = require('../../assets/icons/password.png');
 const deleteIcon = require('../../assets/icons/delete.png');
 const suggestions = require('../../assets/icons/suggestions.png');
 const animations = require('../../assets/icons/animations.png');
+const notifications = require('../../assets/icons/notifications.png');
 
 export const SETTINGS_ITEMS = [
   {
@@ -130,6 +131,13 @@ export const SETTINGS_ITEMS = [
         icon: animations,
         navigateTo: null,
         type: 'ENABLE_INTRO_ANIMATIONS',
+      },
+      {
+        id: 5,
+        title: 'Enable & receive notifications',
+        icon: notifications,
+        navigateTo: null,
+        type: 'ENABLE_NOTIFICATIONS',
       },
     ],
   },
