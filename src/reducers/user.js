@@ -17,6 +17,7 @@ import {
   SEARCH_ERROR,
   EDIT_PROFILE,
   GET_RECOMMENDED_USERS,
+  UPDATE_NOTIFICATION_SETTINGS,
 } from '../actions/user';
 import { RESET_MESSAGES } from '../actions/auth';
 import { FOLLOW_USER_PRESS_RESULT } from '../actions/profile';
@@ -103,6 +104,17 @@ const userState = (state = initialState, action) => {
         ...state,
         usersSearchFeed: action.result.users,
         error: null,
+      };
+    case UPDATE_NOTIFICATION_SETTINGS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          settings: {
+            ...state.user.settings,
+            enableNotifications: action.enableNotifications,
+          },
+        },
       };
     case 'RESET_USER':
       return {

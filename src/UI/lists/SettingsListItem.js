@@ -59,7 +59,7 @@ const SettingsListItem = ({
               toggleSettings(settingsCopy);
               setUserSettings(settingsCopy);
             }}
-            value={userSettings.enableIntronimations}
+            value={userSettings.enableIntroAnimations}
           />
         );
       case 'ENABLE_NOTIFICATIONS':
@@ -99,7 +99,7 @@ const SettingsListItem = ({
       enableIntroAnimations: settingsValue.enableIntroAnimations,
       enableNotifications: settingsValue.enableNotifications,
     }));
-  }, []);
+  }, [settingsValue]);
 
   if (hide) return null;
 

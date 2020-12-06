@@ -81,7 +81,7 @@ const Settings = ({
     if (!currentUser) return;
 
     setUserSettings(currentUser.settings);
-  }, []);
+  }, [currentUser.settings]);
 
   if (!currentUser) {
     return (

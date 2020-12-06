@@ -1,7 +1,26 @@
 module.exports = {
-  extends: 'airbnb',
-  plugins: ['react'],
+  extends: ['airbnb', 'prettier'],
+  parser: 'babel-eslint',
+  env: {
+    jest: true,
+  },
   rules: {
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'no-use-before-define': 'off',
+    'react/jsx-filename-extension': 'off',
+    'react/prop-types': 'off',
+    'comma-dangle': 'off',
+    'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'operator-linebreak': [
+      'error',
+      'after',
+      {
+        overrides: {
+          ':': 'before',
+        },
+      },
+    ],
+  },
+  globals: {
+    fetch: false,
   },
 };

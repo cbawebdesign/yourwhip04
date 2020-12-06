@@ -4,14 +4,20 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import OneSignal from 'react-native-onesignal';
 
 import NavigationContainer from './config/routes';
-import { COLORS, ONESIGNAL_APP_ID } from './config/constants';
+import {
+  COLORS,
+  ENABLE_ONESIGNAL_PRIVACY_CONSENT,
+  ONESIGNAL_APP_ID,
+} from './config/constants';
 
 import store from './config/store';
 
 export default function App() {
   const oneSignalInit = () => {
-    //Remove this method to stop OneSignal Debugging
+    // Remove this method to stop OneSignal Debugging
     OneSignal.setLogLevel(6, 0);
+
+    OneSignal.setRequiresUserPrivacyConsent(ENABLE_ONESIGNAL_PRIVACY_CONSENT);
 
     OneSignal.init(ONESIGNAL_APP_ID, {
       kOSSettingsKeyAutoPrompt: false,

@@ -81,4 +81,5 @@ export const COLORS = {
 };
 
 // ONESIGNAL APP ID
+export const ENABLE_ONESIGNAL_PRIVACY_CONSENT = true;
 export const ONESIGNAL_APP_ID = '6f1c3120-be92-468e-b65c-15a462b97dd1';

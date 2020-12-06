@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { View, Keyboard, ImageBackground, ScrollView } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { ScrollView } from 'react-native';
+import OneSignal from 'react-native-onesignal';
 
 import ContainerView from '../../UI/views/ContainerView';
 import FooterView from '../../UI/views/footer/FooterView';
@@ -13,22 +13,15 @@ import {
 } from '../../UI/text/CustomText';
 
 import { signupStep3 } from '../../actions/auth';
+import SwitchButton from '../../UI/buttons/SwitchButton';
 
 import styles from '../styles';
 
+import { TERMS } from '../../helpers/dataHelper';
 import {
-  termsPar0,
-  termsPar1,
-  termsPar1_1,
-  termsPar2,
-  termsPar3,
-  termsPar4,
-  termsPar5,
-  termsPar6,
-  termsPar7,
-  termsPar8,
-  termsPar9,
-} from '../../helpers/dataHelper';
+  ONESIGNAL_APP_ID,
+  ENABLE_ONESIGNAL_PRIVACY_CONSENT,
+} from '../../config/constants';
 
 const paragraphStyle = {
   paddingBottom: 12,
@@ -38,7 +31,10 @@ const paragraphStyle = {
 const SignupStep3 = ({ route }) => {
   const dispatch = useDispatch();
 
+  const [oneSignalAgree, setOneSignalAgree] = useState(false);
+
   const handleAgree = () => {
+    OneSignal.provideUserConsent(oneSignalAgree);
     dispatch(signupStep3());
   };
 
@@ -65,23 +61,75 @@ const SignupStep3 = ({ route }) => {
           fontFamily={BODY_FONT}
           style={{ paddingBottom: 48, fontSize: 15 }}
         />
-        <Text text={termsPar0} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar1} fontFamily={BODY_FONT} style={paragraphStyle} />
         <Text
-          text={termsPar1_1}
+          text={TERMS.termsPar1}
           fontFamily={BODY_FONT}
           style={paragraphStyle}
         />
-        <Text text={termsPar2} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar3} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar4} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar5} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar6} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar7} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar8} fontFamily={BODY_FONT} style={paragraphStyle} />
-        <Text text={termsPar9} fontFamily={BODY_FONT} style={paragraphStyle} />
+        <Text
+          text={TERMS.termsPar2}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar3}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar4}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar5}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar6}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar7}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar8}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar9}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar10}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
+        <Text
+          text={TERMS.termsPar11}
+          fontFamily={BODY_FONT}
+          style={paragraphStyle}
+        />
       </ScrollView>
-      <FooterView backgroundColor="white">
+      <FooterView
+        backgroundColor="white"
+        height={ENABLE_ONESIGNAL_PRIVACY_CONSENT ? 130 : 60}
+        padding
+      >
+        {ENABLE_ONESIGNAL_PRIVACY_CONSENT && (
+          <SwitchButton
+            title="Notifications privacy consent"
+            subtitle="Your consent is required in order to receive notifications in this app"
+            onChange={(value) => setOneSignalAgree(value)}
+            switchValue={oneSignalAgree}
+          />
+        )}
         <TextButton
           text="I Agree"
           onPress={handleAgree}

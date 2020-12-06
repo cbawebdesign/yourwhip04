@@ -30,6 +30,8 @@ export const SEARCH_ERROR = 'SEARCH_ERROR';
 
 export const RESET_USER = 'RESET_USER';
 
+export const UPDATE_NOTIFICATION_SETTINGS = 'UPDATE_NOTIFICATION_SETTINGS';
+
 export const getUserInfo = (token) => ({
   type: GET_USER_INFO,
   token,
@@ -70,4 +72,9 @@ export const resetUser = () => ({
 export const search = (input) => ({
   type: SEARCH,
   input,
+});
+
+export const updateNotificationSettings = (enableNotifications) => ({
+  type: UPDATE_NOTIFICATION_SETTINGS,
+  enableNotifications,
 });

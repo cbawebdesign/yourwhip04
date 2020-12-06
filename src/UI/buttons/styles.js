@@ -134,9 +134,14 @@ export const albumButtonStyles = EStyleSheet.create({
   },
 });
 
-export default {
-  blockButtonStyles,
-  textButtonStyles,
-  iconButtonStyles,
-  imagePickerButtonStyles,
-};
+export const switchButtonStyles = EStyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+  },
+  textView: {
+    width: '80%',
+  },
+});

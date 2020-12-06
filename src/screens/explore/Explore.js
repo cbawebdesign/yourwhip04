@@ -40,6 +40,7 @@ import { sharePost, shareImage } from '../../actions/shares';
 import { likeImagePress } from '../../actions/detail';
 import { resetCommentUpdateCheck } from '../../actions/comments';
 import { resetDeepLinkSlug } from '../../actions/general';
+import { updateNotificationSettings } from '../../actions/user';
 
 import {
   exploreItemPropType,
@@ -387,19 +388,32 @@ const Explore = ({
   const handleLoadMoreThrottled = useRef(debounce(500, handleLoadMore)).current;
 
   const getNotificationPermissions = async (updatePermissions) => {
-    const showStatus = (status) => {
+    if (!currentUser) return;
+
+    const showStatus = async (status) => {
       if (!status.hasPrompted) {
-        OneSignal.registerForPushNotifications();
+        if (currentUser.settings.enableNotifications) {
+          OneSignal.provideUserConsent(true);
+        }
+
+        OneSignal.promptForPushNotificationsWithUserResponse((result) => {
+          dispatch(updateNotificationSettings(result));
+        });
+
+        return status;
       }
-      // if (
-      //   settingsState.notificationsEnabled === status.userSubscriptionEnabled
-      // ) {
-      //   return settingsState;
-      // } else if (updatePermissions) {
-      //   OneSignal.setSubscription(settingsState.notificationsEnabled);
-      // } else {
-      //   dispatch(setNotificationsPermissions(status.userSubscriptionEnabled));
-      // }
+
+      if (
+        currentUser.settings.enableNotifications === status.notificationsEnabled
+      ) {
+        return currentUser.settings;
+      }
+
+      if (updatePermissions) {
+        OneSignal.setSubscription(currentUser.settings.enableNotifications);
+      } else {
+        dispatch(updateNotificationSettings(status.notificationsEnabled));
+      }
 
       return status;
     };
@@ -451,6 +465,15 @@ const Explore = ({
     if (currentUser) {
       dispatch(getHomeFeed(0, PAGINATION_LIMIT));
     }
+
+    // UPDATE NOTIFICATION FROM SETTINGS SCREEN
+    if (
+      currentUser &&
+      currentUser.settings &&
+      currentUser.settings.enableNotifications
+    ) {
+      getNotificationPermissions(true);
+    }
   }, [currentUser]);
 
   useEffect(() => {
@@ -473,7 +496,7 @@ const Explore = ({
     }
 
     // EXPLORE INIT
-    getNotificationPermissions();
+    getNotificationPermissions(false);
     setFeed(homeFeed);
 
     // DO UPDATE CHECK AFTER RETURNING FROM COMMENT SCREEN
@@ -595,6 +618,7 @@ Explore.defaultProps = {
   newLikeCheck: null,
   success: null,
   deepLinkSlug: null,
+  deletedPost: null,
 };
 
 Explore.propTypes = {
@@ -618,6 +642,9 @@ Explore.propTypes = {
   newLikeCheck: PropTypes.shape({
     fromScreen: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+  }),
+  deletedPost: PropTypes.shape({
+    fromScreen: PropTypes.string,
   }),
   success: PropTypes.shape({
     reportPostSuccess: PropTypes.string,
