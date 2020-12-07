@@ -18,6 +18,7 @@ import {
   EDIT_PROFILE,
   GET_RECOMMENDED_USERS,
   UPDATE_NOTIFICATION_SETTINGS,
+  SHOW_NOTIFICATIONS_MODAL,
 } from '../actions/user';
 import { RESET_MESSAGES } from '../actions/auth';
 import { FOLLOW_USER_PRESS_RESULT } from '../actions/profile';
@@ -32,6 +33,7 @@ const initialState = {
   walkthroughComplete: false,
   recommendedFeed: [],
   usersSearchFeed: [],
+  showNotificationsModal: false,
 };
 
 const userState = (state = initialState, action) => {
@@ -115,6 +117,12 @@ const userState = (state = initialState, action) => {
             enableNotifications: action.enableNotifications,
           },
         },
+        showNotificationsModal: false,
+      };
+    case SHOW_NOTIFICATIONS_MODAL:
+      return {
+        ...state,
+        showNotificationsModal: action.showModal,
       };
     case 'RESET_USER':
       return {

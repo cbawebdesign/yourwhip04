@@ -182,11 +182,14 @@ export const showOneSignalStatus = async (
   currentUser,
   updatePermissions
 ) => {
-  console.log(status);
-
   if (!status.hasPrompted) {
+    OneSignal.registerForPushNotifications();
+
     if (currentUser.settings.enableNotifications) {
       OneSignal.provideUserConsent(true);
+      setTimeout(() => {
+        OneSignal.registerForPushNotifications();
+      }, 1000);
     }
 
     // SHOW PROMPT ON FIRST OPEN
@@ -195,7 +198,7 @@ export const showOneSignalStatus = async (
         OneSignal.promptForPushNotificationsWithUserResponse(
           (hasPermission) => {
             if (hasPermission) {
-              OneSignal.registerForPushNotifications(); // TODO: IS THIS STILL REQUIRED
+              // OneSignal.registerForPushNotifications(); // TODO: IS THIS STILL REQUIRED
               setOneSignalExternalUserId(currentUser._id);
               resolve('SUBSCRIBED_AFTER_PROMPT');
             } else {
@@ -205,7 +208,6 @@ export const showOneSignalStatus = async (
         );
       });
 
-    console.log('1');
     const promptResult = await handlePrompt();
     return promptResult;
   }
@@ -215,15 +217,15 @@ export const showOneSignalStatus = async (
     !status.notificationsEnabled &&
     currentUser.settings.enableNotifications
   ) {
-    OneSignal.addTrigger('prompt_ios', 'true');
-
     return 'RE_PROMPT';
   }
 
+  // NOTE: LEAVING THIS COMMENTED OUT: CODE ONLY WORKS ON ACTUAL DEVICE, NOT IN SIMULATOR
+  // CASE NOW HANDLED WITH LOCAL VAR IN EXPLORE SCREEN
   // EXIT IF NOTHING CHANGES
-  // if (currentUser.settings.enableNotifications === status.subscriptionEnabled) {
-  //   return 'NO_CHANGE';
-  // }
+  if (currentUser.settings.enableNotifications === status.subscriptionEnabled) {
+    return 'NO_CHANGE';
+  }
 
   // UPDATE SETTINGS IF SOMETHING CHANGES
   if (updatePermissions) {

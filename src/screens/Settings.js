@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { AnimatedSectionList, AnimationType } from 'flatlist-intro-animations';
+import * as Linking from 'expo-linking';
 
 import ContainerView from '../UI/views/ContainerView';
 import SettingsListItem from '../UI/lists/SettingsListItem';
@@ -17,7 +18,11 @@ import { SETTINGS_ITEMS } from '../helpers/dataHelper';
 import { userPropType } from '../config/propTypes';
 
 import { logout, deleteAccount, resetMessages } from '../actions/auth';
-import { updateSettings } from '../actions/user';
+import {
+  updateSettings,
+  updateNotificationSettings,
+  displayNotificationsModal,
+} from '../actions/user';
 
 import styles from './styles';
 
@@ -27,6 +32,7 @@ const Settings = ({
   currentUser,
   appSettings,
   fetching,
+  showNotificationsModal,
 }) => {
   const dispatch = useDispatch();
   const paddingBottom = useSafeArea().bottom;
@@ -50,6 +56,28 @@ const Settings = ({
         title: 'Cancel',
         onPress: () => {
           setShowModal(false);
+        },
+      },
+    ],
+  };
+
+  const notificationsModalOptions = {
+    title: 'Notification Settings',
+    body: `Your device's notification settings are currently set to 'Off'. Press 'Settings' and enable notifications in order to receive our notifications.`,
+    buttonStyle: 'horizontal',
+    buttons: [
+      {
+        title: 'Settings',
+        onPress: () => {
+          dispatch(displayNotificationsModal(false));
+          Linking.openURL('app-settings:');
+        },
+      },
+      {
+        title: 'Cancel',
+        onPress: () => {
+          dispatch(updateNotificationSettings(false));
+          dispatch(displayNotificationsModal(false));
         },
       },
     ],
@@ -100,8 +128,8 @@ const Settings = ({
       loadingOptions={{ loading: fetching }}
     >
       <SelectionModal
-        showModal={showModal}
-        options={modalOptions}
+        showModal={showModal || showNotificationsModal}
+        options={showModal ? modalOptions : notificationsModalOptions}
         timeout={500}
         onModalDismissPress={() => setShowModal(false)}
       />
@@ -172,13 +200,14 @@ Settings.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  const { user, appSettings } = state.user;
+  const { user, appSettings, showNotificationsModal } = state.user;
   const { fetching } = state.auth;
 
   return {
     currentUser: user,
     appSettings,
     fetching,
+    showNotificationsModal,
   };
 };
 

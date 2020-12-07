@@ -24,8 +24,6 @@ import {
   onSocialMediaShare,
   onSharedImageShareHelper,
   onDeleteHelper,
-  setOneSignalExternalUserId,
-  removeOneSignalExternalUserId,
   showOneSignalStatus,
 } from '../../helpers/socialHelpers';
 import { isCloseToBottom } from '../../helpers/scrollHelpers';
@@ -43,7 +41,10 @@ import { sharePost, shareImage } from '../../actions/shares';
 import { likeImagePress } from '../../actions/detail';
 import { resetCommentUpdateCheck } from '../../actions/comments';
 import { resetDeepLinkSlug } from '../../actions/general';
-import { updateNotificationSettings } from '../../actions/user';
+import {
+  updateNotificationSettings,
+  displayNotificationsModal,
+} from '../../actions/user';
 
 import {
   exploreItemPropType,
@@ -54,18 +55,7 @@ import { COMPOSE, PAGINATION_LIMIT } from '../../config/constants';
 
 import styles from '../styles';
 
-// DISPLAYS THE EXPLORE SCREEN
-// Applies the following props:
-// route (contains params with all the 'compose' information
-// created in the Compose screen)
-// navigation (to navigate to the Profile screen on pressing
-// the profile image)
-// currentUser (contains all data of loged-in user)
-// homeFeed (list of feed items ('posts'))
-// commentsUpdateCheck (contains post ID if a comment was added
-// inside the Comment screen, else 'null')
-
-let notificationsEnabled = false;
+let notificationsEnabled; // NOT GREAT, BUT ONESIGNAL NOT RETURNIG CORRECT VALUES IN SIMULATOR
 
 const Explore = ({
   route,
@@ -395,54 +385,7 @@ const Explore = ({
   const getNotificationPermissions = async (updatePermissions) => {
     if (!currentUser) return;
 
-    // const showStatus = async (status) => {
-    //   if (!status.hasPrompted) {
-    //     if (currentUser.settings.enableNotifications) {
-    //       OneSignal.provideUserConsent(true);
-    //     }
-
-    //     // SHOW PROMPT ON FIRST OPEN
-    //     OneSignal.promptForPushNotificationsWithUserResponse((result) => {
-    //       if (result) {
-    //         OneSignal.registerForPushNotifications(); // TODO: IS THIS STILL REQUIRED
-    //         setOneSignalExternalUserId(currentUser._id);
-    //       }
-    //       dispatch(updateNotificationSettings(result));
-    //     });
-
-    //     return status;
-    //   }
-
-    //   // SHOW PROMPT IF PREVIOUS PROMPT HAS BEEN DECLINED
-    //   if (
-    //     !status.notificationsEnabled &&
-    //     currentUser.settings.enableNotifications
-    //   ) {
-    //     OneSignal.addTrigger('prompt_ios', 'true');
-
-    //     return status;
-    //   }
-
-    //   // EXIT IF NOTHING CHANGES
-    //   if (
-    //     currentUser.settings.subscriptionEnabled === status.notificationsEnabled
-    //   ) {
-    //     return currentUser.settings;
-    //   }
-
-    //   // UPDATE SETTINGS IF SOMETHING CHANGES
-    //   if (updatePermissions) {
-    //     if (currentUser.settings.enableNotifications) {
-    //       setOneSignalExternalUserId(currentUser._id);
-    //     } else {
-    //       removeOneSignalExternalUserId();
-    //     }
-    //   } else {
-    //     dispatch(updateNotificationSettings(status.notificationsEnabled));
-    //   }
-
-    //   return status;
-    // };
+    console.log('1');
 
     OneSignal.getPermissionSubscriptionState(async (status) => {
       const result = await showOneSignalStatus(
@@ -451,7 +394,7 @@ const Explore = ({
         updatePermissions
       );
 
-      console.log('result', result);
+      console.log('resutl', result);
 
       switch (result) {
         case 'SUBSCRIBED':
@@ -465,6 +408,9 @@ const Explore = ({
           if (!notificationsEnabled) return;
           dispatch(updateNotificationSettings(false));
           notificationsEnabled = false;
+          break;
+        case 'RE_PROMPT':
+          dispatch(displayNotificationsModal(true));
           break;
         default:
           break;
