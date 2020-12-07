@@ -77,12 +77,6 @@ const Settings = ({
     dispatch(updateSettings(settings));
   };
 
-  useEffect(() => {
-    if (!currentUser) return;
-
-    setUserSettings(currentUser.settings);
-  }, [currentUser.settings]);
-
   if (!currentUser) {
     return (
       <ContainerView
@@ -92,6 +86,12 @@ const Settings = ({
       />
     );
   }
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    setUserSettings(currentUser.settings);
+  }, [currentUser.settings]);
 
   return (
     <ContainerView

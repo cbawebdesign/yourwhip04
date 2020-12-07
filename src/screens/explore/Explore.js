@@ -24,6 +24,9 @@ import {
   onSocialMediaShare,
   onSharedImageShareHelper,
   onDeleteHelper,
+  setOneSignalExternalUserId,
+  removeOneSignalExternalUserId,
+  showOneSignalStatus,
 } from '../../helpers/socialHelpers';
 import { isCloseToBottom } from '../../helpers/scrollHelpers';
 
@@ -61,6 +64,8 @@ import styles from '../styles';
 // homeFeed (list of feed items ('posts'))
 // commentsUpdateCheck (contains post ID if a comment was added
 // inside the Comment screen, else 'null')
+
+let notificationsEnabled = false;
 
 const Explore = ({
   route,
@@ -390,35 +395,81 @@ const Explore = ({
   const getNotificationPermissions = async (updatePermissions) => {
     if (!currentUser) return;
 
-    const showStatus = async (status) => {
-      if (!status.hasPrompted) {
-        if (currentUser.settings.enableNotifications) {
-          OneSignal.provideUserConsent(true);
-        }
+    // const showStatus = async (status) => {
+    //   if (!status.hasPrompted) {
+    //     if (currentUser.settings.enableNotifications) {
+    //       OneSignal.provideUserConsent(true);
+    //     }
 
-        OneSignal.promptForPushNotificationsWithUserResponse((result) => {
-          dispatch(updateNotificationSettings(result));
-        });
+    //     // SHOW PROMPT ON FIRST OPEN
+    //     OneSignal.promptForPushNotificationsWithUserResponse((result) => {
+    //       if (result) {
+    //         OneSignal.registerForPushNotifications(); // TODO: IS THIS STILL REQUIRED
+    //         setOneSignalExternalUserId(currentUser._id);
+    //       }
+    //       dispatch(updateNotificationSettings(result));
+    //     });
 
-        return status;
+    //     return status;
+    //   }
+
+    //   // SHOW PROMPT IF PREVIOUS PROMPT HAS BEEN DECLINED
+    //   if (
+    //     !status.notificationsEnabled &&
+    //     currentUser.settings.enableNotifications
+    //   ) {
+    //     OneSignal.addTrigger('prompt_ios', 'true');
+
+    //     return status;
+    //   }
+
+    //   // EXIT IF NOTHING CHANGES
+    //   if (
+    //     currentUser.settings.subscriptionEnabled === status.notificationsEnabled
+    //   ) {
+    //     return currentUser.settings;
+    //   }
+
+    //   // UPDATE SETTINGS IF SOMETHING CHANGES
+    //   if (updatePermissions) {
+    //     if (currentUser.settings.enableNotifications) {
+    //       setOneSignalExternalUserId(currentUser._id);
+    //     } else {
+    //       removeOneSignalExternalUserId();
+    //     }
+    //   } else {
+    //     dispatch(updateNotificationSettings(status.notificationsEnabled));
+    //   }
+
+    //   return status;
+    // };
+
+    OneSignal.getPermissionSubscriptionState(async (status) => {
+      const result = await showOneSignalStatus(
+        status,
+        currentUser,
+        updatePermissions
+      );
+
+      console.log('result', result);
+
+      switch (result) {
+        case 'SUBSCRIBED':
+        case 'SUBSCRIBED_AFTER_PROMPT':
+          if (notificationsEnabled) return;
+          dispatch(updateNotificationSettings(true));
+          notificationsEnabled = true;
+          break;
+        case 'UNSUBSCRIBED':
+        case 'UNSUBSCRIBED_AFTER_PROMPT':
+          if (!notificationsEnabled) return;
+          dispatch(updateNotificationSettings(false));
+          notificationsEnabled = false;
+          break;
+        default:
+          break;
       }
-
-      if (
-        currentUser.settings.enableNotifications === status.notificationsEnabled
-      ) {
-        return currentUser.settings;
-      }
-
-      if (updatePermissions) {
-        OneSignal.setSubscription(currentUser.settings.enableNotifications);
-      } else {
-        dispatch(updateNotificationSettings(status.notificationsEnabled));
-      }
-
-      return status;
-    };
-
-    OneSignal.getPermissionSubscriptionState(showStatus);
+    });
   };
 
   const renderItem = ({ item }) => (
@@ -467,11 +518,7 @@ const Explore = ({
     }
 
     // UPDATE NOTIFICATION FROM SETTINGS SCREEN
-    if (
-      currentUser &&
-      currentUser.settings &&
-      currentUser.settings.enableNotifications
-    ) {
+    if (currentUser && currentUser.settings) {
       getNotificationPermissions(true);
     }
   }, [currentUser]);
@@ -496,7 +543,6 @@ const Explore = ({
     }
 
     // EXPLORE INIT
-    getNotificationPermissions(false);
     setFeed(homeFeed);
 
     // DO UPDATE CHECK AFTER RETURNING FROM COMMENT SCREEN
@@ -537,6 +583,10 @@ const Explore = ({
       dispatch(resetDeepLinkSlug());
     };
   }, [deepLinkSlug]);
+
+  useEffect(() => {
+    getNotificationPermissions(false);
+  }, []);
 
   if (!feed || !currentUser) {
     return <View />;
