@@ -34,6 +34,7 @@ import {
   resetDeletePost,
   hidePost,
   hidePostsByUser,
+  updateVideoViewCount,
 } from '../../actions/posts';
 import { reportPost } from '../../actions/flagged';
 import { likePostPress, resetNewLikeCheck } from '../../actions/likes';
@@ -51,7 +52,11 @@ import {
   userPropType,
   commentPropType,
 } from '../../config/propTypes';
-import { COMPOSE, PAGINATION_LIMIT } from '../../config/constants';
+import {
+  COMPOSE,
+  PAGINATION_LIMIT,
+  VIDEO_VIEW_DURATION_FOR_VIEW,
+} from '../../config/constants';
 
 import styles from '../styles';
 
@@ -394,8 +399,6 @@ const Explore = ({
           updatePermissions
         );
 
-        console.log('result', result);
-
         switch (result) {
           case 'SUBSCRIBED':
           case 'SUBSCRIBED_AFTER_PROMPT':
@@ -426,6 +429,14 @@ const Explore = ({
     });
   };
 
+  let viewCountUpdated = useRef(false).current;
+  const handleUpdateVideoViewCount = (data, item) => {
+    if (!viewCountUpdated && data.currentTime >= VIDEO_VIEW_DURATION_FOR_VIEW) {
+      dispatch(updateVideoViewCount(item._id));
+      viewCountUpdated = true;
+    }
+  };
+
   const renderItem = ({ item }) => (
     <ExploreListItem
       item={item}
@@ -449,6 +460,8 @@ const Explore = ({
       itemInView={viewableItems.some(
         (viewable) => viewable.item._id === item._id
       )}
+      onVideoProgress={(data) => handleUpdateVideoViewCount(data, item)}
+      videoViewCount={item.viewCount > 0 ? item.viewCount : null}
     />
   );
 

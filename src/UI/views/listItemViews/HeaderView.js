@@ -23,6 +23,7 @@ import { headerViewStyles as styles } from './styles';
 
 const timeIcon = require('../../../../assets/icons/time.png');
 const moreIcon = require('../../../../assets/icons/more.png');
+const viewIcon = require('../../../../assets/icons/discover.png');
 
 const HeaderView = ({
   profileImage,
@@ -34,6 +35,7 @@ const HeaderView = ({
   onPressDisabled,
   isSharedItem,
   onOptionsPress,
+  videoViewCount,
 }) => (
   <View style={styles.container}>
     <ProfileImageView
@@ -54,13 +56,25 @@ const HeaderView = ({
           <Text text={name} fontFamily={TITLE_FONT} style={styles.name} />
         )}
         {dateTime && (
-          <View style={styles.timeView}>
-            <Image source={timeIcon} style={styles.timeIcon} />
-            <Text
-              text={getTimeHelper(dateTime)}
-              fontFamily={TITLE_FONT}
-              style={styles.time}
-            />
+          <View style={styles.dataView}>
+            <View style={styles.dataDetailView}>
+              <Image source={timeIcon} style={styles.dataIcon} />
+              <Text
+                text={getTimeHelper(dateTime)}
+                fontFamily={TITLE_FONT}
+                style={styles.time}
+              />
+            </View>
+            {videoViewCount && (
+              <View style={styles.dataDetailView}>
+                <Image source={viewIcon} style={styles.dataIcon} />
+                <Text
+                  text={`${videoViewCount} views`}
+                  fontFamily={TITLE_FONT}
+                  style={styles.time}
+                />
+              </View>
+            )}
           </View>
         )}
       </View>
@@ -82,6 +96,7 @@ HeaderView.defaultProps = {
   onOptionsPress: null,
   onPressDisabled: false,
   isSharedItem: false,
+  videoViewCount: null,
 };
 
 HeaderView.propTypes = {
@@ -94,6 +109,7 @@ HeaderView.propTypes = {
   onOptionsPress: PropTypes.func,
   onPressDisabled: PropTypes.bool,
   isSharedItem: PropTypes.bool,
+  videoViewCount: PropTypes.number,
 };
 
 export default HeaderView;

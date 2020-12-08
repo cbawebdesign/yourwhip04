@@ -1,7 +1,7 @@
 const DEVELOPMENT_API_HOST = 'http://localhost:4000';
 const PRODUCTION_API_HOST = 'https://share-test-app.herokuapp.com';
 
-const development = false;
+const development = true;
 
 export const API_HOST = development
   ? DEVELOPMENT_API_HOST
@@ -23,6 +23,9 @@ export const ENABLE_LIKE_ANIMATION_2 = false;
 // ENABLE USER'S ABILITY TO LIKE OWN POSTS /
 // COMMENTS / REPLIES SETTING
 export const ENABLE_LIKE_YOURSELF = true;
+
+// VIDEO VIEW DURATION CONSTANT IN SECONDS
+export const VIDEO_VIEW_DURATION_FOR_VIEW = 3;
 
 // PROFILE: DEfAULT STATUS MESSAGE SETTING
 export const PERSONAL_DESCRIPTION = 'Still pondering on a cool catch-phrase...';

@@ -56,6 +56,7 @@ import {
   DELETE_POST,
   HIDE_POST,
   HIDE_POSTS_BY_USER,
+  UPDATE_VIDEO_VIEWCOUNT,
 } from '../actions/posts';
 import {
   getHomeFeed,
@@ -64,6 +65,7 @@ import {
   deletePost,
   hidePost,
   hidePostsByUser,
+  updateVideoViewCount,
 } from './posts';
 
 import {
@@ -153,6 +155,7 @@ export default function* rootSaga() {
   yield takeEvery(DELETE_POST, deletePost);
   yield takeEvery(HIDE_POST, hidePost);
   yield takeEvery(HIDE_POSTS_BY_USER, hidePostsByUser);
+  yield takeEvery(UPDATE_VIDEO_VIEWCOUNT, updateVideoViewCount);
 
   // FLAGGED
   yield takeEvery(GET_FLAGGED_POSTS_FEED, getFlaggedPostsFeed);

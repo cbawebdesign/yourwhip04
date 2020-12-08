@@ -34,12 +34,17 @@ export const headerViewStyles = EStyleSheet.create({
     fontSize: 14,
     letterSpacing: 1,
   },
-  timeView: {
+  dataView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 0,
+    paddingTop: 4,
   },
-  timeIcon: {
+  dataDetailView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 25,
+  },
+  dataIcon: {
     width: 15,
     height: 15,
     marginRight: 5,

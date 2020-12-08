@@ -22,6 +22,10 @@ export const HIDE_POSTS_BY_USER = 'HIDE_POSTS_BY_USER';
 export const HIDE_POSTS_BY_USER_RESULT = 'HIDE_POSTS_BY_USER_RESULT';
 export const HIDE_POSTS_BY_USER_ERROR = 'HIDE_POSTS_BY_USER_ERROR';
 
+export const UPDATE_VIDEO_VIEWCOUNT = 'UPDATE_VIDEO_VIEWCOUNT';
+export const UPDATE_VIDEO_VIEWCOUNT_RESULT = 'UPDATE_VIDEO_VIEWCOUNT_RESULT';
+export const UPDATE_VIDEO_VIEWCOUNT_ERROR = 'UPDATE_VIDEO_VIEWCOUNT_ERROR';
+
 export const RESET_DELETE_POST = 'RESET_DELETE_POST';
 
 export const getHomeFeed = (skip, limit) => ({
@@ -57,4 +61,9 @@ export const hidePostsByUser = (userId) => ({
 
 export const resetDeletePost = () => ({
   type: RESET_DELETE_POST,
+});
+
+export const updateVideoViewCount = (parentId) => ({
+  type: UPDATE_VIDEO_VIEWCOUNT,
+  parentId,
 });

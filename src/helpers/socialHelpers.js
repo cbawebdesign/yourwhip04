@@ -211,7 +211,6 @@ export const showOneSignalStatus = async (
   }
 
   if (Platform.OS === 'android' && !updatePermissions) {
-    console.log('passing 1');
     OneSignal.setSubscription(true);
     setOneSignalExternalUserId(currentUser._id);
     return 'ANDROID_INIT_SUBSCRIBED';
