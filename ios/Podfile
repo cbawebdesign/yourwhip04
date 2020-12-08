@@ -5,6 +5,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '10.0'
 
 target 'SocialNetworkingBackendApp' do
+  pod 'GoogleAds-IMA-iOS-SDK', '< 3.11.3'
+  
   use_unimodules!
   config = use_native_modules!
 

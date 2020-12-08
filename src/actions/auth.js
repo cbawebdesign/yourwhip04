@@ -59,8 +59,9 @@ export const signupStep2 = (userInfo) => ({
   userInfo,
 });
 
-export const signupStep3 = () => ({
+export const signupStep3 = (onesignalConsent) => ({
   type: SIGNUP_STEP3,
+  onesignalConsent,
 });
 
 export const storeToken = (token) => ({

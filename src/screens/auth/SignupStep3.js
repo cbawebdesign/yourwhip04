@@ -19,7 +19,6 @@ import styles from '../styles';
 
 import { TERMS } from '../../helpers/dataHelper';
 import { ENABLE_ONESIGNAL_PRIVACY_CONSENT } from '../../config/constants';
-import { setOnesignalConsent } from '../../actions/user';
 
 const paragraphStyle = {
   paddingBottom: 12,
@@ -32,11 +31,8 @@ const SignupStep3 = ({ route }) => {
   const [oneSignalAgree, setOneSignalAgree] = useState(false);
 
   const handleAgree = () => {
-    if (oneSignalAgree) {
-      dispatch(setOnesignalConsent(true));
-    }
     OneSignal.provideUserConsent(oneSignalAgree);
-    dispatch(signupStep3());
+    dispatch(signupStep3(oneSignalAgree));
   };
 
   return (

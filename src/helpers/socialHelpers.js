@@ -183,18 +183,13 @@ export const showOneSignalStatus = async (
   updatePermissions
 ) => {
   if (Platform.OS === 'ios' && !status.hasPrompted) {
-    OneSignal.registerForPushNotifications();
-
-    if (currentUser.settings.enableNotifications) {
-      OneSignal.registerForPushNotifications();
-    }
-
     // SHOW PROMPT ON FIRST OPEN
     const handlePrompt = () =>
-      new Promise((resolve, reject) => {
+      new Promise((resolve) => {
         OneSignal.promptForPushNotificationsWithUserResponse(
           (hasPermission) => {
             if (hasPermission) {
+              OneSignal.registerForPushNotifications();
               setOneSignalExternalUserId(currentUser._id);
               resolve('SUBSCRIBED_AFTER_PROMPT');
             } else {
@@ -202,8 +197,6 @@ export const showOneSignalStatus = async (
             }
           }
         );
-
-        reject(new Error('FAILED'));
       });
 
     const promptResult = await handlePrompt();
@@ -211,8 +204,10 @@ export const showOneSignalStatus = async (
   }
 
   if (Platform.OS === 'android' && !updatePermissions) {
+    OneSignal.registerForPushNotifications();
     OneSignal.setSubscription(true);
     setOneSignalExternalUserId(currentUser._id);
+
     return 'ANDROID_INIT_SUBSCRIBED';
   }
 
@@ -222,13 +217,6 @@ export const showOneSignalStatus = async (
     currentUser.settings.enableNotifications
   ) {
     return 'RE_PROMPT';
-  }
-
-  // NOTE: LEAVING THIS COMMENTED OUT: CODE ONLY WORKS ON ACTUAL DEVICE, NOT IN SIMULATOR
-  // CASE NOW HANDLED WITH LOCAL VAR IN EXPLORE SCREEN
-  // EXIT IF NOTHING CHANGES
-  if (currentUser.settings.enableNotifications === status.subscriptionEnabled) {
-    return 'NO_CHANGE';
   }
 
   // UPDATE SETTINGS IF SOMETHING CHANGES

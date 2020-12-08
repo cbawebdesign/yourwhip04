@@ -478,14 +478,14 @@ const Explore = ({
   );
 
   useEffect(() => {
+    if (!currentUser) return;
+
     // FETCH POSTS ON SCREEN LOAD
     // REFETCH AFTER CURRENTUSER EDITS PROFILE IMAGE
     if (currentUser) {
       dispatch(getHomeFeed(0, PAGINATION_LIMIT));
     }
-  }, [currentUser]);
 
-  useEffect(() => {
     // UPDATE NOTIFICATION FROM SETTINGS SCREEN
     if (
       currentUser &&

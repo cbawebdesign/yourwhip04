@@ -198,6 +198,7 @@ export function* signupStep3(action) {
       name: 'profileImage',
     });
   }
+  formData.append('onesignalConsent', action.onesignalConsent);
 
   try {
     const response = yield call(fetchSignupStep2, formData);
