@@ -10,7 +10,7 @@ const middleware = [sagaMiddleware];
 
 // DEVELOPMENT ONLY: ENABLES DISPLAY OF API REQUESTS LOGS
 if (process.env.NODE_ENV === 'development') {
-  // middleware.push(logger);
+  middleware.push(logger);
 }
 
 const store = createStore(reducers(), applyMiddleware(...middleware));

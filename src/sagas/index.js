@@ -29,6 +29,8 @@ import {
   REMOVE_USER_PRESS,
   EDIT_PROFILE,
   SEARCH,
+  UPDATE_NOTIFICATION_SETTINGS,
+  SET_ONESIGNAL_CONSENT,
 } from '../actions/user';
 import {
   getUserInfo,
@@ -38,6 +40,7 @@ import {
   removeUserPress,
   editProfile,
   search,
+  setOnesignalConsent,
 } from './user';
 
 import { LIKE_POST_PRESS } from '../actions/likes';
@@ -193,10 +196,12 @@ export default function* rootSaga() {
   // PEOPLE / USER
   yield takeEvery(UPDATE_INTERESTS, updateInterests);
   yield takeEvery(UPDATE_SETTINGS, updateSettings);
+  yield takeEvery(UPDATE_NOTIFICATION_SETTINGS, updateSettings);
   yield takeEvery(EDIT_PROFILE, editProfile);
   yield takeEvery(GET_RECOMMENDED_USERS, getRecommendedUsers);
   yield takeEvery(REMOVE_USER_PRESS, removeUserPress);
   yield takeEvery(SEARCH, search);
+  yield takeEvery(SET_ONESIGNAL_CONSENT, setOnesignalConsent);
 
   // STATS
   yield takeEvery(GET_STATS_FOR_MONTH, getStatsForMonth);

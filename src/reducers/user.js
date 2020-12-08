@@ -17,8 +17,9 @@ import {
   SEARCH_ERROR,
   EDIT_PROFILE,
   GET_RECOMMENDED_USERS,
-  UPDATE_NOTIFICATION_SETTINGS,
   SHOW_NOTIFICATIONS_MODAL,
+  SET_ONESIGNAL_CONSENT_RESULT,
+  SET_ONESIGNAL_CONSENT_ERROR,
 } from '../actions/user';
 import { RESET_MESSAGES } from '../actions/auth';
 import { FOLLOW_USER_PRESS_RESULT } from '../actions/profile';
@@ -34,6 +35,7 @@ const initialState = {
   recommendedFeed: [],
   usersSearchFeed: [],
   showNotificationsModal: false,
+  onesignalConsent: false,
 };
 
 const userState = (state = initialState, action) => {
@@ -68,6 +70,7 @@ const userState = (state = initialState, action) => {
         ...state,
         user: action.result.user,
         appSettings: action.result.app,
+        onesignalConsent: action.result.user.onesignalConsent,
       };
     case UPDATE_INTERESTS_RESULT:
       return {
@@ -107,17 +110,10 @@ const userState = (state = initialState, action) => {
         usersSearchFeed: action.result.users,
         error: null,
       };
-    case UPDATE_NOTIFICATION_SETTINGS:
+    case SET_ONESIGNAL_CONSENT_RESULT:
       return {
         ...state,
-        user: {
-          ...state.user,
-          settings: {
-            ...state.user.settings,
-            enableNotifications: action.enableNotifications,
-          },
-        },
-        showNotificationsModal: false,
+        onesignalConsent: action.result,
       };
     case SHOW_NOTIFICATIONS_MODAL:
       return {
@@ -156,6 +152,7 @@ const userState = (state = initialState, action) => {
     case REMOVE_USER_PRESS_ERROR:
     case EDIT_PROFILE_ERROR:
     case SEARCH_ERROR:
+    case SET_ONESIGNAL_CONSENT_ERROR:
       return {
         ...state,
         fetching: false,

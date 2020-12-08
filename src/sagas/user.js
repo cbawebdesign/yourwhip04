@@ -15,6 +15,10 @@ import {
   EDIT_PROFILE_ERROR,
   SEARCH_RESULT,
   SEARCH_ERROR,
+  UPDATE_NOTIFICATION_SETTINGS,
+  UPDATE_SETTINGS,
+  SET_ONESIGNAL_CONSENT_RESULT,
+  SET_ONESIGNAL_CONSENT_ERROR,
 } from '../actions/user';
 
 import { API_HOST } from '../config/constants';
@@ -42,7 +46,7 @@ const fetchUpdateInterests = ({ action, token }) =>
     }),
   });
 
-const fetchUpdateSettings = ({ token, action }) =>
+const fetchUpdateSettings = ({ token, settings }) =>
   fetch(`${API_HOST}/update-settings/`, {
     method: 'post',
     headers: {
@@ -51,7 +55,7 @@ const fetchUpdateSettings = ({ token, action }) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      settings: action.settings,
+      settings,
     }),
   });
 
@@ -99,6 +103,19 @@ const fetchSearch = ({ action, token }) =>
     },
   });
 
+const fetchSetOnesignalConsent = ({ action, token }) =>
+  fetch(`${API_HOST}/update-onesignal-consent/`, {
+    method: 'post',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      consent: action.consent,
+    }),
+  });
+
 export function* getUserInfo(action) {
   try {
     const response = yield call(fetchUserInfo, action);
@@ -140,9 +157,17 @@ export function* updateInterests(action) {
 
 export function* updateSettings(action) {
   const token = yield select((state) => state.auth.authToken);
+  let settings;
+
+  if (action.type === UPDATE_NOTIFICATION_SETTINGS) {
+    settings = yield select((state) => state.user.user.settings);
+    settings.enableNotifications = action.enableNotifications;
+  } else if (action.type === UPDATE_SETTINGS) {
+    settings = action.settings;
+  }
 
   try {
-    const response = yield call(fetchUpdateSettings, { action, token });
+    const response = yield call(fetchUpdateSettings, { settings, token });
     const result = yield response.json();
 
     // NO NEED TO STORE INTEREST IN APP STATE FOR THE MOMENT
@@ -273,5 +298,26 @@ export function* search(action) {
     }
   } catch (e) {
     yield put({ type: SEARCH_ERROR, error: e.message });
+  }
+}
+
+export function* setOnesignalConsent(action) {
+  const token = yield select((state) => state.auth.authToken);
+
+  try {
+    const response = yield call(fetchSetOnesignalConsent, { action, token });
+    const result = yield response.json();
+
+    // NO NEED TO STORE INTEREST IN APP STATE FOR THE MOMENT
+    if (result.error) {
+      if (result.type === 'INVALID_TOKEN') {
+        yield put({ type: 'INVALID_TOKEN' });
+      }
+      yield put({ type: SET_ONESIGNAL_CONSENT_ERROR, error: result.error });
+    } else {
+      yield put({ type: SET_ONESIGNAL_CONSENT_RESULT, result });
+    }
+  } catch (e) {
+    yield put({ type: SET_ONESIGNAL_CONSENT_ERROR, error: e.message });
   }
 }

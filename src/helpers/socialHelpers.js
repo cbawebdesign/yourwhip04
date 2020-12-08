@@ -182,23 +182,19 @@ export const showOneSignalStatus = async (
   currentUser,
   updatePermissions
 ) => {
-  if (!status.hasPrompted) {
+  if (Platform.OS === 'ios' && !status.hasPrompted) {
     OneSignal.registerForPushNotifications();
 
     if (currentUser.settings.enableNotifications) {
-      OneSignal.provideUserConsent(true);
-      setTimeout(() => {
-        OneSignal.registerForPushNotifications();
-      }, 1000);
+      OneSignal.registerForPushNotifications();
     }
 
     // SHOW PROMPT ON FIRST OPEN
     const handlePrompt = () =>
-      new Promise((resolve) => {
+      new Promise((resolve, reject) => {
         OneSignal.promptForPushNotificationsWithUserResponse(
           (hasPermission) => {
             if (hasPermission) {
-              // OneSignal.registerForPushNotifications(); // TODO: IS THIS STILL REQUIRED
               setOneSignalExternalUserId(currentUser._id);
               resolve('SUBSCRIBED_AFTER_PROMPT');
             } else {
@@ -206,10 +202,19 @@ export const showOneSignalStatus = async (
             }
           }
         );
+
+        reject(new Error('FAILED'));
       });
 
     const promptResult = await handlePrompt();
     return promptResult;
+  }
+
+  if (Platform.OS === 'android' && !updatePermissions) {
+    console.log('passing 1');
+    OneSignal.setSubscription(true);
+    setOneSignalExternalUserId(currentUser._id);
+    return 'ANDROID_INIT_SUBSCRIBED';
   }
 
   // SHOW PROMPT IF PREVIOUS PROMPT HAS BEEN DECLINED
@@ -238,7 +243,6 @@ export const showOneSignalStatus = async (
     return 'UNSUBSCRIBED';
   }
 
-  // dispatch(updateNotificationSettings(status.notificationsEnabled));
   return status.notificationsEnabled ? 'SUBSCRIBED' : 'UNSUBSCRIBED';
 };
 

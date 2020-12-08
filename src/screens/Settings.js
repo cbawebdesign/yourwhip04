@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { AnimatedSectionList, AnimationType } from 'flatlist-intro-animations';
@@ -22,6 +22,7 @@ import {
   updateSettings,
   updateNotificationSettings,
   displayNotificationsModal,
+  setOnesignalConsent,
 } from '../actions/user';
 
 import styles from './styles';
@@ -33,6 +34,7 @@ const Settings = ({
   appSettings,
   fetching,
   showNotificationsModal,
+  onesignalConsent,
 }) => {
   const dispatch = useDispatch();
   const paddingBottom = useSafeArea().bottom;
@@ -61,6 +63,28 @@ const Settings = ({
     ],
   };
 
+  const notificationsConsentModalOptions = {
+    title: 'Notifications Privacy Consent',
+    body: `Your consent is required in order to receive notifications in this app.`,
+    buttonStyle: 'horizontal',
+    buttons: [
+      {
+        title: 'Give consent',
+        onPress: () => {
+          dispatch(setOnesignalConsent(true));
+          dispatch(displayNotificationsModal(false));
+        },
+      },
+      {
+        title: 'Cancel',
+        onPress: () => {
+          dispatch(updateNotificationSettings(false));
+          dispatch(displayNotificationsModal(false));
+        },
+      },
+    ],
+  };
+
   const notificationsModalOptions = {
     title: 'Notification Settings',
     body: `Your device's notification settings are currently set to 'Off'. Press 'Settings' and enable notifications in order to receive our notifications.`,
@@ -70,7 +94,11 @@ const Settings = ({
         title: 'Settings',
         onPress: () => {
           dispatch(displayNotificationsModal(false));
-          Linking.openURL('app-settings:');
+          if (Platform.OS === 'android') {
+            Linking.openSettings();
+          } else {
+            Linking.openURL('app-settings:');
+          }
         },
       },
       {
@@ -105,6 +133,12 @@ const Settings = ({
     dispatch(updateSettings(settings));
   };
 
+  useEffect(() => {
+    if (!currentUser) return;
+
+    setUserSettings(currentUser.settings);
+  }, [currentUser.settings]);
+
   if (!currentUser) {
     return (
       <ContainerView
@@ -115,12 +149,6 @@ const Settings = ({
     );
   }
 
-  useEffect(() => {
-    if (!currentUser) return;
-
-    setUserSettings(currentUser.settings);
-  }, [currentUser.settings]);
-
   return (
     <ContainerView
       touchEnabled={false}
@@ -128,10 +156,16 @@ const Settings = ({
       loadingOptions={{ loading: fetching }}
     >
       <SelectionModal
-        showModal={showModal || showNotificationsModal}
+        showModal={showModal || (onesignalConsent && showNotificationsModal)}
         options={showModal ? modalOptions : notificationsModalOptions}
         timeout={500}
         onModalDismissPress={() => setShowModal(false)}
+      />
+      <SelectionModal
+        showModal={showNotificationsModal && !onesignalConsent}
+        options={notificationsConsentModalOptions}
+        timeout={500}
+        onModalDismissPress={() => null}
       />
       <AnimatedSectionList
         contentContainerStyle={[
@@ -196,11 +230,17 @@ Settings.propTypes = {
   appSettings: PropTypes.shape({
     enableSuggestionsControl: PropTypes.bool.isRequired,
   }).isRequired,
+  onesignalConsent: PropTypes.bool.isRequired,
   fetching: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
-  const { user, appSettings, showNotificationsModal } = state.user;
+  const {
+    user,
+    appSettings,
+    showNotificationsModal,
+    onesignalConsent,
+  } = state.user;
   const { fetching } = state.auth;
 
   return {
@@ -208,6 +248,7 @@ const mapStateToProps = (state) => {
     appSettings,
     fetching,
     showNotificationsModal,
+    onesignalConsent,
   };
 };
 

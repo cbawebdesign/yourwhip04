@@ -30,6 +30,10 @@ export const SEARCH = 'SEARCH';
 export const SEARCH_RESULT = 'SEARCH_RESULT';
 export const SEARCH_ERROR = 'SEARCH_ERROR';
 
+export const SET_ONESIGNAL_CONSENT = 'SET_ONESIGNAL_CONSENT';
+export const SET_ONESIGNAL_CONSENT_RESULT = 'SET_ONESIGNAL_CONSENT_RESULT';
+export const SET_ONESIGNAL_CONSENT_ERROR = 'SET_ONESIGNAL_CONSENT_ERROR';
+
 export const RESET_USER = 'RESET_USER';
 
 export const UPDATE_NOTIFICATION_SETTINGS = 'UPDATE_NOTIFICATION_SETTINGS';
@@ -86,4 +90,9 @@ export const updateNotificationSettings = (enableNotifications) => ({
 export const displayNotificationsModal = (showModal) => ({
   type: SHOW_NOTIFICATIONS_MODAL,
   showModal,
+});
+
+export const setOnesignalConsent = (consent) => ({
+  type: SET_ONESIGNAL_CONSENT,
+  consent,
 });

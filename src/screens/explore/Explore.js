@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useDispatch, connect } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { debounce } from 'throttle-debounce';
@@ -69,6 +69,7 @@ const Explore = ({
   fetching,
   success,
   deepLinkSlug,
+  onesignalConsent,
 }) => {
   const dispatch = useDispatch();
   const paddingBottom = useSafeArea().bottom;
@@ -385,35 +386,42 @@ const Explore = ({
   const getNotificationPermissions = async (updatePermissions) => {
     if (!currentUser) return;
 
-    console.log('1');
-
     OneSignal.getPermissionSubscriptionState(async (status) => {
-      const result = await showOneSignalStatus(
-        status,
-        currentUser,
-        updatePermissions
-      );
+      try {
+        const result = await showOneSignalStatus(
+          status,
+          currentUser,
+          updatePermissions
+        );
 
-      console.log('resutl', result);
+        console.log('result', result);
 
-      switch (result) {
-        case 'SUBSCRIBED':
-        case 'SUBSCRIBED_AFTER_PROMPT':
-          if (notificationsEnabled) return;
-          dispatch(updateNotificationSettings(true));
-          notificationsEnabled = true;
-          break;
-        case 'UNSUBSCRIBED':
-        case 'UNSUBSCRIBED_AFTER_PROMPT':
-          if (!notificationsEnabled) return;
-          dispatch(updateNotificationSettings(false));
-          notificationsEnabled = false;
-          break;
-        case 'RE_PROMPT':
-          dispatch(displayNotificationsModal(true));
-          break;
-        default:
-          break;
+        switch (result) {
+          case 'SUBSCRIBED':
+          case 'SUBSCRIBED_AFTER_PROMPT':
+            if (notificationsEnabled) return;
+            dispatch(updateNotificationSettings(true));
+            notificationsEnabled = true;
+            break;
+          case 'ANDROID_INIT_SUBSCRIBED':
+          case 'ANDROID_RE_INIT_SUBSCRIBED':
+            dispatch(updateNotificationSettings(true));
+            notificationsEnabled = true;
+            break;
+          case 'UNSUBSCRIBED':
+          case 'UNSUBSCRIBED_AFTER_PROMPT':
+            if (!notificationsEnabled) return;
+            dispatch(updateNotificationSettings(false));
+            notificationsEnabled = false;
+            break;
+          case 'RE_PROMPT':
+            dispatch(displayNotificationsModal(true));
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        console.log('error', error);
       }
     });
   };
@@ -462,12 +470,31 @@ const Explore = ({
     if (currentUser) {
       dispatch(getHomeFeed(0, PAGINATION_LIMIT));
     }
+  }, [currentUser]);
 
+  useEffect(() => {
     // UPDATE NOTIFICATION FROM SETTINGS SCREEN
-    if (currentUser && currentUser.settings) {
+    if (
+      currentUser &&
+      currentUser.settings &&
+      currentUser.settings.enableNotifications !== notificationsEnabled
+    ) {
+      if (currentUser.settings.enableNotifications && !onesignalConsent) {
+        dispatch(displayNotificationsModal(true));
+      }
       getNotificationPermissions(true);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (onesignalConsent) {
+      OneSignal.provideUserConsent(true);
+    }
+    const timer = setTimeout(() => {
+      getNotificationPermissions(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [onesignalConsent]);
 
   useEffect(() => {
     // HANDLE POST DELETE ACTION IN EXPLORE DETAIL SCREEN
@@ -642,6 +669,7 @@ Explore.propTypes = {
   deletedPost: PropTypes.shape({
     fromScreen: PropTypes.string,
   }),
+  onesignalConsent: PropTypes.bool.isRequired,
   success: PropTypes.shape({
     reportPostSuccess: PropTypes.string,
   }),
@@ -651,7 +679,7 @@ Explore.propTypes = {
 const mapStateToProps = (state) => {
   const { homeFeed, endOfList, deletedPost, fetching } = state.posts;
   const { success } = state.flagged;
-  const { user } = state.user;
+  const { user, onesignalConsent } = state.user;
   const { commentsUpdateCheck } = state.comments;
   const { newLikeCheck } = state.likes;
   const { deepLinkSlug } = state.general;
@@ -666,6 +694,7 @@ const mapStateToProps = (state) => {
     fetching,
     success,
     deepLinkSlug,
+    onesignalConsent,
   };
 };
 
