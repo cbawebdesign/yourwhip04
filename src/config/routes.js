@@ -491,6 +491,7 @@ const NavigationContainerStack = ({
         }
 
         // A BRANCH LINK WAS OPENED
+        console.log('slug', params.slug);
         dispatch(setDeepLinkSlug(params.slug));
 
         listener(uri);
@@ -508,9 +509,16 @@ const NavigationContainerStack = ({
   useEffect(() => {
     linking = getLinking();
     linking.subscribe((url) => {
-      if (url && url.includes('yourwhip://')) {
+      if (
+        url &&
+        url.includes('yourwhip://') &&
+        !url.includes('open?link_click_id')
+      ) {
         const postSlug = url.split('?')[1];
-        dispatch(setDeepLinkSlug(postSlug));
+        if (postSlug.length > 0) {
+          console.log('postslug', postSlug);
+          dispatch(setDeepLinkSlug(postSlug));
+        }
       }
     });
     linking.getInitialURL();

@@ -23,6 +23,7 @@ import { likeImagePress, getDetailPost } from '../../actions/detail';
 import { sharePost, shareImage } from '../../actions/shares';
 import { deletePost } from '../../actions/posts';
 import { resetCommentUpdateCheck } from '../../actions/comments';
+import { resetDeepLinkSlug } from '../../actions/general';
 
 import styles from '../styles';
 
@@ -32,6 +33,7 @@ const ExploreDetail = ({
   currentUser,
   commentsUpdateCheck,
   detailPost,
+  deepLinkSlug,
 }) => {
   const dispatch = useDispatch();
 
@@ -230,7 +232,12 @@ const ExploreDetail = ({
   useEffect(() => {
     dispatch(getDetailPost(route.params.parentId));
 
-    return () => dispatch({ type: 'RESET_DETAILPOST' });
+    return () => {
+      if (deepLinkSlug) {
+        dispatch(resetDeepLinkSlug());
+      }
+      dispatch({ type: 'RESET_DETAILPOST' });
+    };
   }, []);
 
   useEffect(() => {
@@ -313,6 +320,7 @@ const ExploreDetail = ({
 
 ExploreDetail.defaultProps = {
   commentsUpdateCheck: null,
+  deepLinkSlug: null,
 };
 
 ExploreDetail.propTypes = {
@@ -327,17 +335,20 @@ ExploreDetail.propTypes = {
     fromScreen: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
   }),
+  deepLinkSlug: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
   const { user } = state.user;
   const { commentsUpdateCheck } = state.comments;
   const { detailPost } = state.detail;
+  const { deepLinkSlug } = state.general;
 
   return {
     currentUser: user,
     commentsUpdateCheck,
     detailPost,
+    deepLinkSlug,
   };
 };
 
