@@ -205,7 +205,6 @@ export const showOneSignalStatus = async (
 
   if (Platform.OS === 'android' && !updatePermissions) {
     OneSignal.registerForPushNotifications();
-    OneSignal.setSubscription(true);
     setOneSignalExternalUserId(currentUser._id);
 
     return 'ANDROID_INIT_SUBSCRIBED';
@@ -236,7 +235,7 @@ export const showOneSignalStatus = async (
 export const setOneSignalExternalUserId = (userId) => {
   OneSignal.setExternalUserId(userId, (result) => {
     if (result && result.push && result.push.success) {
-      console.log('Subscribing to notifications');
+      console.log('Subscribing to notifications', result.push);
       OneSignal.setSubscription(true);
     }
   });
@@ -245,7 +244,7 @@ export const setOneSignalExternalUserId = (userId) => {
 export const removeOneSignalExternalUserId = () => {
   OneSignal.removeExternalUserId((result) => {
     if (result && result.push && result.push.success) {
-      console.log('Unsubscribing from notifications');
+      console.log('Unsubscribing from notifications', result.push);
       OneSignal.setSubscription(false);
     }
   });

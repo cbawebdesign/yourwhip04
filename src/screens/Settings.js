@@ -87,12 +87,13 @@ const Settings = ({
 
   const notificationsModalOptions = {
     title: 'Notification Settings',
-    body: `Your device's notification settings are currently set to 'Off'. Press 'Settings' and enable notifications in order to receive our notifications.`,
+    body: `Your device's notification settings are currently set to 'Off'. Press 'Settings', enable notifications and try again.`,
     buttonStyle: 'horizontal',
     buttons: [
       {
         title: 'Settings',
         onPress: () => {
+          dispatch(updateNotificationSettings(false));
           dispatch(displayNotificationsModal(false));
           if (Platform.OS === 'android') {
             Linking.openSettings();
