@@ -69,7 +69,9 @@ const HeaderView = ({
               <View style={styles.dataDetailView}>
                 <Image source={viewIcon} style={styles.dataIcon} />
                 <Text
-                  text={`${videoViewCount} views`}
+                  text={`${videoViewCount} view${
+                    videoViewCount === 1 ? '' : 's'
+                  }`}
                   fontFamily={TITLE_FONT}
                   style={styles.time}
                 />

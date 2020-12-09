@@ -10,6 +10,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import LoadingView from './LoadingView';
 
+import { COLORS } from '../../config/constants';
+
 import { containerViewStyles as styles } from './styles';
 
 // DISPLAYS THE OUTER VIEW FOR MOST SCREENS.
@@ -96,7 +98,7 @@ ContainerView.defaultProps = {
   onPress: () => null,
   hasGradient: false,
   touchEnabled: true,
-  backgroundColor: '#DDDDDD',
+  backgroundColor: COLORS.backgroundGray,
   loadingOptions: null,
   headerHeight: 0,
   enableKeyboardAvoidingView: true,

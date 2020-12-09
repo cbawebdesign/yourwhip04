@@ -26,6 +26,7 @@ import {
 } from '../actions/user';
 
 import styles from './styles';
+import { removeOneSignalExternalUserId } from '../helpers/socialHelpers';
 
 const Settings = ({
   route,
@@ -52,6 +53,7 @@ const Settings = ({
         onPress: () => {
           setShowModal(false);
           dispatch(deleteAccount(currentUser._id, 'SETTINGS'));
+          removeOneSignalExternalUserId();
         },
       },
       {

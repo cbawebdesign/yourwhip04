@@ -1,5 +1,5 @@
 const DEVELOPMENT_API_HOST = 'http://localhost:4000';
-const PRODUCTION_API_HOST = 'https://share-test-app.herokuapp.com';
+const PRODUCTION_API_HOST = 'https://yourwhip.herokuapp.com';
 
 const development = false;
 
@@ -77,13 +77,12 @@ export const REPLIES = 'Replies';
 export const COLORS = {
   primary1: '#3b5998',
   primary2: '#FFFFFF',
-  backgroundGray: '#DDDDDD',
+  backgroundGray: '#DDD',
   black: '#020202',
   white: '#fff',
   lightGray: '#C4C4C4',
 };
 
 // ONESIGNAL APP ID DEVELOPMENT & PRODUCTION
-export const ENABLE_ONESIGNAL_PRIVACY_CONSENT = true;
-// export const ONESIGNAL_APP_ID = 'a133640a-8fdd-4df5-b7d0-ced5c967cc26'; // PRODUCTION
-export const ONESIGNAL_APP_ID = '6f1c3120-be92-468e-b65c-15a462b97dd1'; // DEVELOPMENT
+export const ENABLE_ONESIGNAL_PRIVACY_CONSENT = true; // DON'T CHANGE TO FALSE
+export const ONESIGNAL_APP_ID = 'a133640a-8fdd-4df5-b7d0-ced5c967cc26'; // PRODUCTION

@@ -25,8 +25,8 @@ const Login = ({ route, navigation, error, success, fetching }) => {
   const dispatch = useDispatch();
   const { keyboardHeight } = useKeyboardState();
 
-  const [email, setEmail] = useState('qq@ww.com');
-  const [password, setPassword] = useState('qqqqqqqq');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [emailActive, setEmailActive] = useState(false);
   const [passwordActive, setPasswordActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
