@@ -23,11 +23,10 @@ export const headerViewStyles = EStyleSheet.create({
     width: '100%',
   },
   titleView: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: VIEW_WIDTH - 100,
-    height: 20,
     paddingLeft: 25,
   },
   name: {

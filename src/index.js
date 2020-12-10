@@ -67,7 +67,7 @@ const onIds = (device) => {
 EStyleSheet.build({
   $primary1: COLORS.primary1,
   $primary2: COLORS.primary2,
-  $backgroundGray: COLORS.backgroundGray,
+  $backgroundGray: COLORS.primaryBackground,
   $black: COLORS.black,
   $white: COLORS.white,
   $searchBar: COLORS.lightGray,

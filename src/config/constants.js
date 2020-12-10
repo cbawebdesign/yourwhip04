@@ -10,8 +10,8 @@ export const API_HOST = development
 // CHANGE INNER & OUTER MARGINS LEFT / RIGHT SETTINGS
 // FOR LIST ITEM BLOCKS ON ALL SCREENS
 // (EMPTY SPACE BETWEEN SCREEN EDGE AND CONTENT ITEM BLOCKS)
-export const OUTER_CONTAINER_MARGIN_LEFT_RIGHT = 25;
-export const INNER_CONTAINER_MARGIN_LEFT_RIGHT = 50;
+export const OUTER_CONTAINER_MARGIN_LEFT_RIGHT = 0;
+export const INNER_CONTAINER_MARGIN_LEFT_RIGHT = 0;
 
 // CHANGE INFINITE SCROLL SETTINGS
 export const PAGINATION_LIMIT = 8;
@@ -77,7 +77,7 @@ export const REPLIES = 'Replies';
 export const COLORS = {
   primary1: '#3b5998',
   primary2: '#FFFFFF',
-  backgroundGray: '#DDD',
+  primaryBackground: '#FFF',
   black: '#020202',
   white: '#fff',
   lightGray: '#C4C4C4',

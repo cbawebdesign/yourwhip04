@@ -9,6 +9,7 @@ import { CustomText as Text, TITLE_FONT, BODY_FONT } from '../text/CustomText';
 import ProfileImageView from '../views/ProfileImageView';
 
 import { userPropType } from '../../config/propTypes';
+import { OUTER_CONTAINER_MARGIN_LEFT_RIGHT } from '../../config/constants';
 
 import { peopleListItemStyles as styles } from './styles';
 
@@ -37,7 +38,10 @@ const PeopleListItem = ({
   const renderRightActions = (progress, dragX) => {
     const trans = dragX.interpolate({
       inputRange: [0, 1],
-      outputRange: [70, 71],
+      outputRange: [
+        85 - OUTER_CONTAINER_MARGIN_LEFT_RIGHT / 2,
+        86 - OUTER_CONTAINER_MARGIN_LEFT_RIGHT / 2,
+      ],
     });
 
     return (

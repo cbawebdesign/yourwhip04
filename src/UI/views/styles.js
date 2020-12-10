@@ -1,7 +1,10 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Dimensions } from 'react-native';
 
-import { OUTER_CONTAINER_MARGIN_LEFT_RIGHT } from '../../config/constants';
+import {
+  OUTER_CONTAINER_MARGIN_LEFT_RIGHT,
+  INNER_CONTAINER_MARGIN_LEFT_RIGHT,
+} from '../../config/constants';
 
 const VIEW_WIDTH = Dimensions.get('window').width;
 
@@ -209,11 +212,12 @@ export const composeViewStyles = EStyleSheet.create({
 
   container: {
     alignSelf: 'center',
-    padding: 25,
+    marginTop: 25,
+    padding: OUTER_CONTAINER_MARGIN_LEFT_RIGHT,
     justifyContent: 'flex-end',
   },
   innerContainer: {
-    width: VIEW_WIDTH - 60,
+    width: VIEW_WIDTH - INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     backgroundColor: '$white',
   },
   descriptionView: {
@@ -236,7 +240,8 @@ export const composeViewStyles = EStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '$backgroundGray',
-    width: VIEW_WIDTH - 32,
+    width: VIEW_WIDTH - OUTER_CONTAINER_MARGIN_LEFT_RIGHT,
+    height: ((VIEW_WIDTH - OUTER_CONTAINER_MARGIN_LEFT_RIGHT) / 3) * 2,
   },
   galleryView: {
     position: 'absolute',
@@ -271,7 +276,7 @@ export const profileImageViewStyles = EStyleSheet.create({
   $gradientColorFrom: '$primary1',
   $gradientColorTo: '$primary2',
   $largeGradientView: {
-    width: '100%',
+    width: VIEW_WIDTH - INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     height: 230,
     justifyContent: 'center',
     alignItems: 'center',
@@ -306,7 +311,7 @@ export const profileInfoViewStyles = EStyleSheet.create({
 
   container: {
     flex: 1,
-    width: VIEW_WIDTH - 50,
+    width: VIEW_WIDTH - OUTER_CONTAINER_MARGIN_LEFT_RIGHT,
     padding: 25,
     backgroundColor: '$white',
     alignSelf: 'center',

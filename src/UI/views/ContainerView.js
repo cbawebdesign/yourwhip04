@@ -98,7 +98,7 @@ ContainerView.defaultProps = {
   onPress: () => null,
   hasGradient: false,
   touchEnabled: true,
-  backgroundColor: COLORS.backgroundGray,
+  backgroundColor: COLORS.primaryBackground,
   loadingOptions: null,
   headerHeight: 0,
   enableKeyboardAvoidingView: true,

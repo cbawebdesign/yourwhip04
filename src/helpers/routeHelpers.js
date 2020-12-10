@@ -117,7 +117,9 @@ export const getHeaderTitleHelper = (route, navigation, currentUser = null) => {
       }
       return { text: '' };
     case COMPOSE:
-      return { text: childStack.params.editPost ? 'Edit' : COMPOSE };
+      return {
+        text: childStack && childStack.params.editPost ? 'Edit' : COMPOSE,
+      };
     case LOGIN:
     case CAMERA:
       return { text: '' };
@@ -125,7 +127,7 @@ export const getHeaderTitleHelper = (route, navigation, currentUser = null) => {
       if (stack && (stack.name === WALKTHROUGH || stack.name === 'Popup')) {
         return '';
       }
-      return { text: childStack.params.title };
+      return { text: childStack && childStack.params.title };
     case HELP:
       return {
         view: (

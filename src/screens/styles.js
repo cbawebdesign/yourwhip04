@@ -1,6 +1,8 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Dimensions } from 'react-native';
 
+import { INNER_CONTAINER_MARGIN_LEFT_RIGHT } from '../config/constants';
+
 const VIEW_WIDTH = Dimensions.get('window').width;
 
 const styles = EStyleSheet.create({
@@ -19,7 +21,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   innerContainer: {
-    flex: 1,
+    width: VIEW_WIDTH - INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     justifyContent: 'center',
     alignSelf: 'center',
   },
