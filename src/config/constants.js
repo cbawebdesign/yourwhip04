@@ -1,3 +1,10 @@
+// APP & COMPANY INFO
+// THESE ARE APPLIED IN THE 'SIGNUP_STEP_3' SCREEN
+export const APP_NAME = 'YourWhip';
+export const COMPANY_NAME = 'YourWhip LLC';
+export const CONTACT_EMAIL = 'info@yourwhip.com';
+
+// APISERVER URLS
 const DEVELOPMENT_API_HOST = 'http://localhost:4000';
 const PRODUCTION_API_HOST = 'https://yourwhip.herokuapp.com';
 

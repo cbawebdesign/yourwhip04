@@ -283,7 +283,7 @@ export const profileImageViewStyles = EStyleSheet.create({
   },
   $largeImage: {
     flex: 1,
-    width: VIEW_WIDTH - 50,
+    width: VIEW_WIDTH - INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     resizeMode: 'cover',
   },
   $largeInitials: {
