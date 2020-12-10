@@ -1,5 +1,12 @@
+// APP & COMPANY INFO
+// THESE ARE APPLIED IN THE 'SIGNUP_STEP_3' SCREEN
+export const APP_NAME = 'YourWhip';
+export const COMPANY_NAME = 'YourWhip LLC';
+export const CONTACT_EMAIL = 'info@yourwhip.com';
+
+// APISERVER URLS
 const DEVELOPMENT_API_HOST = 'http://localhost:4000';
-const PRODUCTION_API_HOST = 'https://test440yw.herokuapp.com';
+const PRODUCTION_API_HOST = 'https://yourwhip.herokuapp.com';
 
 const development = false;
 
@@ -10,8 +17,8 @@ export const API_HOST = development
 // CHANGE INNER & OUTER MARGINS LEFT / RIGHT SETTINGS
 // FOR LIST ITEM BLOCKS ON ALL SCREENS
 // (EMPTY SPACE BETWEEN SCREEN EDGE AND CONTENT ITEM BLOCKS)
-export const OUTER_CONTAINER_MARGIN_LEFT_RIGHT = 25;
-export const INNER_CONTAINER_MARGIN_LEFT_RIGHT = 50;
+export const OUTER_CONTAINER_MARGIN_LEFT_RIGHT = 0;
+export const INNER_CONTAINER_MARGIN_LEFT_RIGHT = 0;
 
 // CHANGE INFINITE SCROLL SETTINGS
 export const PAGINATION_LIMIT = 8;
@@ -23,6 +30,9 @@ export const ENABLE_LIKE_ANIMATION_2 = false;
 // ENABLE USER'S ABILITY TO LIKE OWN POSTS /
 // COMMENTS / REPLIES SETTING
 export const ENABLE_LIKE_YOURSELF = true;
+
+// VIDEO VIEW DURATION CONSTANT IN SECONDS
+export const VIDEO_VIEW_DURATION_FOR_VIEW = 3;
 
 // PROFILE: DEfAULT STATUS MESSAGE SETTING
 export const PERSONAL_DESCRIPTION = 'Still pondering on a cool catch-phrase...';
@@ -74,8 +84,12 @@ export const REPLIES = 'Replies';
 export const COLORS = {
   primary1: '#3b5998',
   primary2: '#FFFFFF',
-  backgroundGray: '#DDDDDD',
+  primaryBackground: '#FFF',
   black: '#020202',
   white: '#fff',
   lightGray: '#C4C4C4',
 };
+
+// ONESIGNAL APP ID DEVELOPMENT & PRODUCTION
+export const ENABLE_ONESIGNAL_PRIVACY_CONSENT = true; // DON'T CHANGE TO FALSE
+export const ONESIGNAL_APP_ID = 'a133640a-8fdd-4df5-b7d0-ced5c967cc26'; // PRODUCTION

@@ -1,24 +1,28 @@
 import React, { useRef, useEffect, createRef, useState } from 'react';
-import {ref} from './MediaViewRef'
 import PropTypes from 'prop-types';
-import { View, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import  Video  from 'react-native-video';
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import Video from 'react-native-video';
 // import { Video } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import {
-  CustomText as Text,
-  TITLE_FONT,
-  BODY_FONT,
-} from '../../text/CustomText';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ref } from './MediaViewRef';
+import { mediaViewStyles as styles } from './styles';
 import {
   imagePropType,
   libraryImagePropType,
   photoPropType,
 } from '../../../config/propTypes';
-
-import { mediaViewStyles as styles } from './styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  CustomText as Text,
+  TITLE_FONT,
+  BODY_FONT,
+} from '../../text/CustomText';
 
 // DISPLAYS THE POST'S IMAGES OR VIDEO
 // FOR EACH ITEM INSIDE THE EXPLORE SCREEN
@@ -28,17 +32,23 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // NOTE: media can be either array of objects (for single or multiple images)
 // or a single object (for video);
-const adTagUrl = "https://pubads.g.doubleclick.net/gampad/ads?slotname=/124319096/external/ad_rule_samples&sz=640x480&ciu_szs=300x250&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpostpod&url=https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/tags&unviewed_position_start=1&output=xml_vast3&impl=s&env=vp&gdfp_req=1&ad_rule=0&cue=15000&vad_type=linear&vpos=midroll&pod=2&mridx=1&rmridx=1&ppos=2&min_ad_duration=0&max_ad_duration=30000&vrid=6376&video_doc_id=short_onecue&cmsid=496&kfa=0&tfcd=0";
+const adTagUrl =
+  'https://pubads.g.doubleclick.net/gampad/ads?slotname=/124319096/external/ad_rule_samples&sz=640x480&ciu_szs=300x250&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpostpod&url=https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/tags&unviewed_position_start=1&output=xml_vast3&impl=s&env=vp&gdfp_req=1&ad_rule=0&cue=15000&vad_type=linear&vpos=midroll&pod=2&mridx=1&rmridx=1&ppos=2&min_ad_duration=0&max_ad_duration=30000&vrid=6376&video_doc_id=short_onecue&cmsid=496&kfa=0&tfcd=0';
 
-
-const MediaView = ({ media, caption, itemInView, enableAutoPlay }) => {
+const MediaView = ({
+  media,
+  caption,
+  itemInView,
+  enableAutoPlay,
+  onProgress,
+}) => {
   let remoteVideoUri;
   let localVideoUri;
 
   // const videoRef = createRef();
   const videoRef = ref;
   const [paused, setPaused] = useState(true);
-  const volume =volume;
+  const volume = volume;
   // CHECK IF URL TO DISPLAY IS LOCAL FOLDER VIDEO
   if (
     media.uri ||
@@ -133,7 +143,7 @@ const MediaView = ({ media, caption, itemInView, enableAutoPlay }) => {
 
   useEffect(() => {
     if (!videoRef.current) {
-      return
+      return;
     }
     if (!remoteVideoUri) return;
 
@@ -146,7 +156,7 @@ const MediaView = ({ media, caption, itemInView, enableAutoPlay }) => {
   }, [itemInView, videoRef, videoRef.current]);
 
   function onLoad(data) {
-    console.log('loaded', data)
+    console.log('loaded', data);
   }
   const videoStyle = {
     width: '100%',
@@ -159,114 +169,111 @@ const MediaView = ({ media, caption, itemInView, enableAutoPlay }) => {
     //   left: 4,
     //   right: 4,
     // },
-
-  }
+  };
 
   return (
-    <View 
-    // style={workingStyles.container}
-    style={styles.container}
+    <View
+      // style={workingStyles.container}
+      style={styles.container}
     >
-
-<View style={{
-  
-  width:"100%",
-  height:"100%",
-  backgroundColor:"red"
-}}>
-      {remoteVideoUri || localVideoUri ? (
-
-
-      <TouchableWithoutFeedback style={videoStyle} onPress={() => {
-      console.log(paused)
-      if (paused) {
-          setPaused(false)
-        } else {
-           setPaused(true)
-        }
-        console.log(paused)
-      }}>
-        <View style={{width:"100%",
-  height:"100%",
-  backgroundColor:"blue"}}>
-          <Video
-            source={{uri: remoteVideoUri || localVideoUri }} // require('./broadchurch.mp4')}
-            //source={{uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}}
-            // source={require('sample-mp4-file.mp4')}
-            ref={videoRef}
+      <View
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'red',
+        }}
+      >
+        {remoteVideoUri || localVideoUri ? (
+          <TouchableWithoutFeedback
             style={videoStyle}
-            // controls={false}
-           // enableAutoPlay={false}
-            controls={true}
-            // rate={this.st aate.rate}
-            paused={paused}
-            volume={volume}
-            // muted={this.state.muted}
-            // ignoreSilentSwitch={this.state.ignoreSilentSwitch}x
-            // resizeMode={this.state.resizeMode}
-            // onLoad={(data ) => onLoad(data)}
-            // onBuffer={this.onBuffer}
-            // onProgress={this.onProgress}
-            // onEnd={() => { Alert.alert('Done!') }}
-            // repeat={true}
-            // controls={this.state.controls}
-            // filter={this.state.filter}
-            // filterEnabled={this.state.filterEnabled}
-            adTagUrl={adTagUrl}
-          /></View>
-          
-</TouchableWithoutFeedback>
-      ):(
+            onPress={() => {
+              if (paused) {
+                setPaused(false);
+              } else {
+                setPaused(true);
+              }
+            }}
+          >
+            <View
+              style={{ width: '100%', height: '100%', backgroundColor: 'blue' }}
+            >
+              <Video
+                source={{ uri: remoteVideoUri || localVideoUri }} // require('./broadchurch.mp4')}
+                //source={{uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}}
+                // source={require('sample-mp4-file.mp4')}
+                ref={videoRef}
+                style={videoStyle}
+                // controls={false}
+                // enableAutoPlay={false}
+                controls={true}
+                // rate={this.st aate.rate}
+                paused={paused}
+                volume={volume}
+                // muted={this.state.muted}
+                // ignoreSilentSwitch={this.state.ignoreSilentSwitch}x
+                // resizeMode={this.state.resizeMode}
+                // onLoad={(data ) => onLoad(data)}
+                // onBuffer={this.onBuffer}
+                // onProgress={this.onProgress}
+                // onEnd={() => { Alert.alert('Done!') }}
+                // repeat={true}
+                // controls={this.state.controls}
+                // filter={this.state.filter}
+                // filterEnabled={this.state.filterEnabled}
+                adTagUrl={adTagUrl}
+                onProgress={onProgress}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        ) : (
+          images.map((item, index) => {
+            if (index < 3) {
+              return renderImage(item, index);
+            }
 
-        images.map((item, index) => {
-          if (index < 3) {
-            return renderImage(item, index);
-          }
-
-          return null;
-        })
-      )}
-</View>
-          </View>
-
+            return null;
+          })
+        )}
+      </View>
+    </View>
   );
-        //  <Video
-        //   ref={videoRef}
-        //   source={{ uri: remoteVideoUri || localVideoUri }}
-        //   rate={1.0}
-        //   volume={1.0}
-        //   resizeMode="cover"
-        //   isMuted
-        //   isLooping
-        //   style={styles.video}
-        //   useNativeControls
-        //   shouldPlay={enableAutoPlay}
-        // />
-      // ) : (
-        // images.map((item, index) => {
-        //   if (index < 3) {
-        //     return renderImage(item, index);
-        //   }
+  //  <Video
+  //   ref={videoRef}
+  //   source={{ uri: remoteVideoUri || localVideoUri }}
+  //   rate={1.0}
+  //   volume={1.0}
+  //   resizeMode="cover"
+  //   isMuted
+  //   isLooping
+  //   style={styles.video}
+  //   useNativeControls
+  //   shouldPlay={enableAutoPlay}
+  // />
+  // ) : (
+  // images.map((item, index) => {
+  //   if (index < 3) {
+  //     return renderImage(item, index);
+  //   }
 
-        //   return null;
-        // })
-      // )}
-      // {!(remoteVideoUri || localVideoUri) && caption !== '' && (
-      //   <LinearGradient
-      //     pointerEvents="none"
-      //     style={styles.captionGradientView}
-      //     colors={['black', 'transparent']}
-      //     start={[0, 1]}
-      //     end={[0, 0]}
-      //   >
-      //     <Text
-      //       text={caption}
-      //       fontFamily={BODY_FONT}
-      //       style={styles.caption}
-      //       numberOfLines={1}
-      //     />
-      //   </LinearGradient>
-      // )}
+  //   return null;
+  // })
+  // )}
+  // {!(remoteVideoUri || localVideoUri) && caption !== '' && (
+  //   <LinearGradient
+  //     pointerEvents="none"
+  //     style={styles.captionGradientView}
+  //     colors={['black', 'transparent']}
+  //     start={[0, 1]}
+  //     end={[0, 0]}
+  //   >
+  //     <Text
+  //       text={caption}
+  //       fontFamily={BODY_FONT}
+  //       style={styles.caption}
+  //       numberOfLines={1}
+  //     />
+  //   </LinearGradient>
+  // )}
   //   </View>
   // );
 };
@@ -285,7 +292,7 @@ const workingStyles = StyleSheet.create({
     right: 0,
   },
   controls: {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderRadius: 5,
     position: 'absolute',
     bottom: 44,
@@ -331,26 +338,26 @@ const workingStyles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   ignoreSilentSwitchControl: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   controlOption: {
     alignSelf: 'center',
     fontSize: 11,
-    color: "white",
+    color: 'white',
     paddingLeft: 2,
     paddingRight: 2,
     lineHeight: 12,
   },
   nativeVideoControls: {
     top: 184,
-    height: 300
-  }
+    height: 300,
+  },
 });
 MediaView.defaultProps = {
   media: null,
@@ -375,8 +382,7 @@ MediaView.propTypes = {
     }),
   ]),
   caption: PropTypes.string,
-//  enableAutoPlay: PropTypes.bool,
+  //  enableAutoPlay: PropTypes.bool,
 };
 
 export default MediaView;
-

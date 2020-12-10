@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  View,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
@@ -8,6 +9,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 
 import LoadingView from './LoadingView';
+
+import { COLORS } from '../../config/constants';
 
 import { containerViewStyles as styles } from './styles';
 
@@ -45,17 +48,19 @@ const ContainerView = ({
         disabled={!touchEnabled}
         style={styles.container}
       >
-        <LinearGradient
-          style={[styles.gradientView, { paddingTop: headerHeight }]}
-          colors={BG_COLOR}
-          start={[0, 0]}
-          end={[1, 1]}
-        >
-          {loadingOptions && loadingOptions.loading && (
-            <LoadingView hideSpinner={loadingOptions.hideSpinner} />
-          )}
-          {children}
-        </LinearGradient>
+        <View style={{ flex: 1 }}>
+          <LinearGradient
+            style={[styles.gradientView, { paddingTop: headerHeight }]}
+            colors={BG_COLOR}
+            start={[0, 0]}
+            end={[1, 1]}
+          >
+            {loadingOptions && loadingOptions.loading && (
+              <LoadingView hideSpinner={loadingOptions.hideSpinner} />
+            )}
+            {children}
+          </LinearGradient>
+        </View>
       </TouchableWithoutFeedback>
     );
   }
@@ -70,17 +75,19 @@ const ContainerView = ({
         disabled={!touchEnabled}
         style={styles.container}
       >
-        <LinearGradient
-          style={[styles.gradientView, { paddingTop: headerHeight }]}
-          colors={BG_COLOR}
-          start={[0, 0]}
-          end={[1, 1]}
-        >
-          {loadingOptions && loadingOptions.loading && (
-            <LoadingView hideSpinner={loadingOptions.hideSpinner} />
-          )}
-          {children}
-        </LinearGradient>
+        <View style={{ flex: 1 }}>
+          <LinearGradient
+            style={[styles.gradientView, { paddingTop: headerHeight }]}
+            colors={BG_COLOR}
+            start={[0, 0]}
+            end={[1, 1]}
+          >
+            {loadingOptions && loadingOptions.loading && (
+              <LoadingView hideSpinner={loadingOptions.hideSpinner} />
+            )}
+            {children}
+          </LinearGradient>
+        </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
@@ -91,7 +98,7 @@ ContainerView.defaultProps = {
   onPress: () => null,
   hasGradient: false,
   touchEnabled: true,
-  backgroundColor: '#DDDDDD',
+  backgroundColor: COLORS.primaryBackground,
   loadingOptions: null,
   headerHeight: 0,
   enableKeyboardAvoidingView: true,

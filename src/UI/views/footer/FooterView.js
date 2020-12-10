@@ -20,14 +20,22 @@ const FooterView = ({
   keyboardActive,
   height,
 }) => {
-  const HEIGHT = height + (keyboardActive ? 0 : useSafeArea().bottom);
+  const paddingBottom = useSafeArea().bottom;
+
+  const HEIGHT = height + (keyboardActive ? 0 : paddingBottom);
   const BG_COLOR = hasGradient
     ? [styles.$gradientColorFrom, styles.$gradientColorTo]
     : [backgroundColor, backgroundColor];
 
   return (
     <LinearGradient colors={BG_COLOR} start={[0, 0]} end={[1, 1]}>
-      <View style={{ height: HEIGHT }}>{children}</View>
+      <View
+        style={{
+          height: HEIGHT,
+        }}
+      >
+        {children}
+      </View>
     </LinearGradient>
   );
 };

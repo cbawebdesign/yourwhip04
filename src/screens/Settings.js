@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { AnimatedSectionList, AnimationType } from 'flatlist-intro-animations';
+import * as Linking from 'expo-linking';
 
 import ContainerView from '../UI/views/ContainerView';
 import SettingsListItem from '../UI/lists/SettingsListItem';
@@ -17,9 +18,15 @@ import { SETTINGS_ITEMS } from '../helpers/dataHelper';
 import { userPropType } from '../config/propTypes';
 
 import { logout, deleteAccount, resetMessages } from '../actions/auth';
-import { updateSettings } from '../actions/user';
+import {
+  updateSettings,
+  updateNotificationSettings,
+  displayNotificationsModal,
+  setOnesignalConsent,
+} from '../actions/user';
 
 import styles from './styles';
+import { removeOneSignalExternalUserId } from '../helpers/socialHelpers';
 
 const Settings = ({
   route,
@@ -27,6 +34,8 @@ const Settings = ({
   currentUser,
   appSettings,
   fetching,
+  showNotificationsModal,
+  onesignalConsent,
 }) => {
   const dispatch = useDispatch();
   const paddingBottom = useSafeArea().bottom;
@@ -44,12 +53,62 @@ const Settings = ({
         onPress: () => {
           setShowModal(false);
           dispatch(deleteAccount(currentUser._id, 'SETTINGS'));
+          removeOneSignalExternalUserId();
         },
       },
       {
         title: 'Cancel',
         onPress: () => {
           setShowModal(false);
+        },
+      },
+    ],
+  };
+
+  const notificationsConsentModalOptions = {
+    title: 'Notifications Privacy Consent',
+    body: `Your consent is required in order to receive notifications in this app.`,
+    buttonStyle: 'horizontal',
+    buttons: [
+      {
+        title: 'Give consent',
+        onPress: () => {
+          dispatch(setOnesignalConsent(true));
+          dispatch(displayNotificationsModal(false));
+        },
+      },
+      {
+        title: 'Cancel',
+        onPress: () => {
+          dispatch(updateNotificationSettings(false));
+          dispatch(displayNotificationsModal(false));
+        },
+      },
+    ],
+  };
+
+  const notificationsModalOptions = {
+    title: 'Notification Settings',
+    body: `Your device's notification settings are currently set to 'Off'. Press 'Settings', enable notifications and try again.`,
+    buttonStyle: 'horizontal',
+    buttons: [
+      {
+        title: 'Settings',
+        onPress: () => {
+          dispatch(updateNotificationSettings(false));
+          dispatch(displayNotificationsModal(false));
+          if (Platform.OS === 'android') {
+            Linking.openSettings();
+          } else {
+            Linking.openURL('app-settings:');
+          }
+        },
+      },
+      {
+        title: 'Cancel',
+        onPress: () => {
+          dispatch(updateNotificationSettings(false));
+          dispatch(displayNotificationsModal(false));
         },
       },
     ],
@@ -81,7 +140,7 @@ const Settings = ({
     if (!currentUser) return;
 
     setUserSettings(currentUser.settings);
-  }, []);
+  }, [currentUser.settings]);
 
   if (!currentUser) {
     return (
@@ -100,10 +159,16 @@ const Settings = ({
       loadingOptions={{ loading: fetching }}
     >
       <SelectionModal
-        showModal={showModal}
-        options={modalOptions}
+        showModal={showModal || (onesignalConsent && showNotificationsModal)}
+        options={showModal ? modalOptions : notificationsModalOptions}
         timeout={500}
         onModalDismissPress={() => setShowModal(false)}
+      />
+      <SelectionModal
+        showModal={showNotificationsModal && !onesignalConsent}
+        options={notificationsConsentModalOptions}
+        timeout={500}
+        onModalDismissPress={() => null}
       />
       <AnimatedSectionList
         contentContainerStyle={[
@@ -168,17 +233,25 @@ Settings.propTypes = {
   appSettings: PropTypes.shape({
     enableSuggestionsControl: PropTypes.bool.isRequired,
   }).isRequired,
+  onesignalConsent: PropTypes.bool.isRequired,
   fetching: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
-  const { user, appSettings } = state.user;
+  const {
+    user,
+    appSettings,
+    showNotificationsModal,
+    onesignalConsent,
+  } = state.user;
   const { fetching } = state.auth;
 
   return {
     currentUser: user,
     appSettings,
     fetching,
+    showNotificationsModal,
+    onesignalConsent,
   };
 };
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { useDispatch, connect } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { debounce } from 'throttle-debounce';
 import { AnimatedFlatList, AnimationType } from 'flatlist-intro-animations';
+import OneSignal from 'react-native-onesignal';
 
 import ContainerView from '../../UI/views/ContainerView';
 import PhotoModal from '../../UI/modals/PhotoModal';
@@ -23,6 +24,7 @@ import {
   onSocialMediaShare,
   onSharedImageShareHelper,
   onDeleteHelper,
+  showOneSignalStatus,
 } from '../../helpers/socialHelpers';
 import { isCloseToBottom } from '../../helpers/scrollHelpers';
 
@@ -32,6 +34,7 @@ import {
   resetDeletePost,
   hidePost,
   hidePostsByUser,
+  updateVideoViewCount,
 } from '../../actions/posts';
 import { reportPost } from '../../actions/flagged';
 import { likePostPress, resetNewLikeCheck } from '../../actions/likes';
@@ -39,26 +42,25 @@ import { sharePost, shareImage } from '../../actions/shares';
 import { likeImagePress } from '../../actions/detail';
 import { resetCommentUpdateCheck } from '../../actions/comments';
 import { resetDeepLinkSlug } from '../../actions/general';
+import {
+  updateNotificationSettings,
+  displayNotificationsModal,
+} from '../../actions/user';
 
 import {
   exploreItemPropType,
   userPropType,
   commentPropType,
 } from '../../config/propTypes';
-import { COMPOSE, PAGINATION_LIMIT } from '../../config/constants';
+import {
+  COMPOSE,
+  PAGINATION_LIMIT,
+  VIDEO_VIEW_DURATION_FOR_VIEW,
+} from '../../config/constants';
 
 import styles from '../styles';
 
-// DISPLAYS THE EXPLORE SCREEN
-// Applies the following props:
-// route (contains params with all the 'compose' information
-// created in the Compose screen)
-// navigation (to navigate to the Profile screen on pressing
-// the profile image)
-// currentUser (contains all data of loged-in user)
-// homeFeed (list of feed items ('posts'))
-// commentsUpdateCheck (contains post ID if a comment was added
-// inside the Comment screen, else 'null')
+let notificationsEnabled; // NOT GREAT, BUT ONESIGNAL NOT RETURNIG CORRECT VALUES IN SIMULATOR
 
 const Explore = ({
   route,
@@ -72,6 +74,7 @@ const Explore = ({
   fetching,
   success,
   deepLinkSlug,
+  onesignalConsent,
 }) => {
   const dispatch = useDispatch();
   const paddingBottom = useSafeArea().bottom;
@@ -385,6 +388,55 @@ const Explore = ({
   };
   const handleLoadMoreThrottled = useRef(debounce(500, handleLoadMore)).current;
 
+  const getNotificationPermissions = async (updatePermissions) => {
+    if (!currentUser) return;
+
+    OneSignal.getPermissionSubscriptionState(async (status) => {
+      try {
+        const result = await showOneSignalStatus(
+          status,
+          currentUser,
+          updatePermissions
+        );
+
+        switch (result) {
+          case 'SUBSCRIBED':
+          case 'SUBSCRIBED_AFTER_PROMPT':
+            if (notificationsEnabled) return;
+            dispatch(updateNotificationSettings(true));
+            notificationsEnabled = true;
+            break;
+          case 'ANDROID_INIT_SUBSCRIBED':
+          case 'ANDROID_RE_INIT_SUBSCRIBED':
+            dispatch(updateNotificationSettings(true));
+            notificationsEnabled = true;
+            break;
+          case 'UNSUBSCRIBED':
+          case 'UNSUBSCRIBED_AFTER_PROMPT':
+            if (!notificationsEnabled) return;
+            dispatch(updateNotificationSettings(false));
+            notificationsEnabled = false;
+            break;
+          case 'RE_PROMPT':
+            dispatch(displayNotificationsModal(true));
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        console.log('error', error);
+      }
+    });
+  };
+
+  let viewCountUpdated = useRef(false).current;
+  const handleUpdateVideoViewCount = (data, item) => {
+    if (!viewCountUpdated && data.currentTime >= VIDEO_VIEW_DURATION_FOR_VIEW) {
+      dispatch(updateVideoViewCount(item._id));
+      viewCountUpdated = true;
+    }
+  };
+
   const renderItem = ({ item }) => (
     <ExploreListItem
       item={item}
@@ -408,6 +460,8 @@ const Explore = ({
       itemInView={viewableItems.some(
         (viewable) => viewable.item._id === item._id
       )}
+      onVideoProgress={(data) => handleUpdateVideoViewCount(data, item)}
+      videoViewCount={item.viewCount > 0 ? item.viewCount : null}
     />
   );
 
@@ -424,12 +478,36 @@ const Explore = ({
   );
 
   useEffect(() => {
+    if (!currentUser) return;
+
     // FETCH POSTS ON SCREEN LOAD
     // REFETCH AFTER CURRENTUSER EDITS PROFILE IMAGE
     if (currentUser) {
       dispatch(getHomeFeed(0, PAGINATION_LIMIT));
     }
+
+    // UPDATE NOTIFICATION FROM SETTINGS SCREEN
+    if (
+      currentUser &&
+      currentUser.settings &&
+      currentUser.settings.enableNotifications !== notificationsEnabled
+    ) {
+      if (currentUser.settings.enableNotifications && !onesignalConsent) {
+        dispatch(displayNotificationsModal(true));
+      }
+      getNotificationPermissions(true);
+    }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (onesignalConsent) {
+      OneSignal.provideUserConsent(true);
+    }
+    const timer = setTimeout(() => {
+      getNotificationPermissions(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [onesignalConsent]);
 
   useEffect(() => {
     // HANDLE POST DELETE ACTION IN EXPLORE DETAIL SCREEN
@@ -449,6 +527,8 @@ const Explore = ({
     if (deletedPost) {
       return;
     }
+
+    // EXPLORE INIT
     setFeed(homeFeed);
 
     // DO UPDATE CHECK AFTER RETURNING FROM COMMENT SCREEN
@@ -489,6 +569,10 @@ const Explore = ({
       dispatch(resetDeepLinkSlug());
     };
   }, [deepLinkSlug]);
+
+  useEffect(() => {
+    getNotificationPermissions(false);
+  }, []);
 
   if (!feed || !currentUser) {
     return <View />;
@@ -570,6 +654,7 @@ Explore.defaultProps = {
   newLikeCheck: null,
   success: null,
   deepLinkSlug: null,
+  deletedPost: null,
 };
 
 Explore.propTypes = {
@@ -594,6 +679,10 @@ Explore.propTypes = {
     fromScreen: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
   }),
+  deletedPost: PropTypes.shape({
+    fromScreen: PropTypes.string,
+  }),
+  onesignalConsent: PropTypes.bool.isRequired,
   success: PropTypes.shape({
     reportPostSuccess: PropTypes.string,
   }),
@@ -603,7 +692,7 @@ Explore.propTypes = {
 const mapStateToProps = (state) => {
   const { homeFeed, endOfList, deletedPost, fetching } = state.posts;
   const { success } = state.flagged;
-  const { user } = state.user;
+  const { user, onesignalConsent } = state.user;
   const { commentsUpdateCheck } = state.comments;
   const { newLikeCheck } = state.likes;
   const { deepLinkSlug } = state.general;
@@ -618,6 +707,7 @@ const mapStateToProps = (state) => {
     fetching,
     success,
     deepLinkSlug,
+    onesignalConsent,
   };
 };
 

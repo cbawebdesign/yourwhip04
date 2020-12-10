@@ -40,6 +40,8 @@ const ExploreListItem = ({
   getListItemViewHeight,
   onDeletePress,
   itemInView,
+  onVideoProgress,
+  videoViewCount,
 }) => {
   const opacity = new Animated.Value(1);
 
@@ -77,6 +79,7 @@ const ExploreListItem = ({
         onProfilePress={onProfilePress}
         onOptionsPress={onOptionsPress}
         onPressDisabled={!onProfilePress}
+        videoViewCount={videoViewCount}
       />
     </>
   );
@@ -120,6 +123,7 @@ const ExploreListItem = ({
             }
             caption={sharedItem.caption}
             itemInView={itemInView}
+            onProgress={onVideoProgress}
           />
         )}
       </View>
@@ -171,6 +175,7 @@ const ExploreListItem = ({
             media={item.video || item.images}
             caption={item.caption}
             itemInView={itemInView}
+            onProgress={onVideoProgress}
           />
         )}
 
@@ -194,6 +199,7 @@ ExploreListItem.defaultProps = {
   isProfile: false,
   getListItemViewHeight: null,
   onDeletePress: null,
+  videoViewCount: null,
 };
 
 ExploreListItem.propTypes = {
@@ -210,6 +216,7 @@ ExploreListItem.propTypes = {
   isProfile: PropTypes.bool,
   getListItemViewHeight: PropTypes.func,
   onDeletePress: PropTypes.func,
+  videoViewCount: PropTypes.number,
 };
 
 export default ExploreListItem;

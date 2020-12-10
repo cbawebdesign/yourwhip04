@@ -99,15 +99,19 @@ const ImagePicker = ({ route, navigation }) => {
   };
 
   const handleGetImages = async (id) => {
-    const assetsResult = await MediaLibrary.getAssetsAsync({
-      album: id,
-      mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
-    });
-    if (assetsResult) {
-      navigation.navigate(MEDIA, {
-        ...route.params,
-        assets: assetsResult.assets,
+    try {
+      const assetsResult = await MediaLibrary.getAssetsAsync({
+        album: id,
+        mediaType: [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video],
       });
+      if (assetsResult) {
+        navigation.navigate(MEDIA, {
+          ...route.params,
+          assets: assetsResult.assets,
+        });
+      }
+    } catch (error) {
+      console.log('error', error);
     }
   };
 

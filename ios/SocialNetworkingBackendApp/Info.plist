@@ -62,6 +62,10 @@
 	<string>Social Networkding Backend App needs access to your library to enable saving media to your library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Social Networkding Backend App needs access to your library to enable uploading media to your posts.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

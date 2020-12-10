@@ -23,23 +23,27 @@ export const headerViewStyles = EStyleSheet.create({
     width: '100%',
   },
   titleView: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: VIEW_WIDTH - 100,
-    height: 20,
     paddingLeft: 25,
   },
   name: {
     fontSize: 14,
     letterSpacing: 1,
   },
-  timeView: {
+  dataView: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 0,
+    paddingTop: 4,
   },
-  timeIcon: {
+  dataDetailView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 25,
+  },
+  dataIcon: {
     width: 15,
     height: 15,
     marginRight: 5,

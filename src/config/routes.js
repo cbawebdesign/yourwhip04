@@ -452,8 +452,9 @@ const NavigationContainerStack = ({
     },
   };
 
-  const linking = {
-    prefixes: ['yourwhip://', 'https://yourwhip.app.link'],
+  let linking;
+  const getLinking = () => ({
+    prefixes: ['yourwhip://'],
 
     // Custom function to get the URL which was used to open the app
     async getInitialURL() {
@@ -485,14 +486,12 @@ const NavigationContainerStack = ({
       // For example, to get to subscribe to incoming links from branch.io:
       const branchUnsubscribe = branch.subscribe(({ error, params, uri }) => {
         if (error) {
-          console.error('Error from Branch: ' + error);
+          console.log('Error from Branch: ' + error);
           return;
         }
 
         // A BRANCH LINK WAS OPENED
-        if (params.slug) {
-          dispatch(setDeepLinkSlug(params.slug));
-        }
+        dispatch(setDeepLinkSlug(params.slug));
 
         listener(uri);
       });
@@ -502,7 +501,27 @@ const NavigationContainerStack = ({
         branchUnsubscribe();
       };
     },
-  };
+
+    config: {},
+  });
+
+  useEffect(() => {
+    linking = getLinking();
+    linking.subscribe((url) => {
+      if (
+        url &&
+        url.includes('yourwhip://') &&
+        !url.includes('open?link_click_id')
+      ) {
+        const postSlug = url.split('?')[1];
+        if (postSlug.length > 0) {
+          console.log('postslug', postSlug);
+          dispatch(setDeepLinkSlug(postSlug));
+        }
+      }
+    });
+    linking.getInitialURL();
+  }, []);
 
   return (
     <NavigationContainer theme={theme} linking={linking}>

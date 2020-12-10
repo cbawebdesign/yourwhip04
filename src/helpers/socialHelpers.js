@@ -1,5 +1,5 @@
 import { Share, Platform, Alert } from 'react-native';
-import branch, { BranchEvent } from 'react-native-branch';
+import OneSignal from 'react-native-onesignal';
 
 export const onLikePressHelper = (
   userId,
@@ -175,4 +175,77 @@ export const onDeleteHelper = (feed, deletedItem) => {
   });
 
   return feedCopy;
+};
+
+export const showOneSignalStatus = async (
+  status,
+  currentUser,
+  updatePermissions
+) => {
+  if (Platform.OS === 'ios' && !status.hasPrompted) {
+    // SHOW PROMPT ON FIRST OPEN
+    const handlePrompt = () =>
+      new Promise((resolve) => {
+        OneSignal.promptForPushNotificationsWithUserResponse(
+          (hasPermission) => {
+            if (hasPermission) {
+              OneSignal.registerForPushNotifications();
+              setOneSignalExternalUserId(currentUser._id);
+              resolve('SUBSCRIBED_AFTER_PROMPT');
+            } else {
+              resolve('UNSUBSCRIBED_AFTER_PROMPT');
+            }
+          }
+        );
+      });
+
+    const promptResult = await handlePrompt();
+    return promptResult;
+  }
+
+  if (Platform.OS === 'android' && !updatePermissions) {
+    OneSignal.registerForPushNotifications();
+    setOneSignalExternalUserId(currentUser._id);
+
+    return 'ANDROID_INIT_SUBSCRIBED';
+  }
+
+  // SHOW PROMPT IF PREVIOUS PROMPT HAS BEEN DECLINED
+  if (
+    !status.notificationsEnabled &&
+    currentUser.settings.enableNotifications
+  ) {
+    return 'RE_PROMPT';
+  }
+
+  // UPDATE SETTINGS IF SOMETHING CHANGES
+  if (updatePermissions) {
+    if (currentUser.settings.enableNotifications) {
+      setOneSignalExternalUserId(currentUser._id);
+      return 'SUBSCRIBED';
+    }
+
+    removeOneSignalExternalUserId();
+    return 'UNSUBSCRIBED';
+  }
+
+  return status.notificationsEnabled ? 'SUBSCRIBED' : 'UNSUBSCRIBED';
+};
+
+export const setOneSignalExternalUserId = (userId) => {
+  OneSignal.setExternalUserId(userId, (result) => {
+    if (result && result.push && result.push.success) {
+      console.log('Subscribing to notifications', result.push);
+      OneSignal.setSubscription(true);
+    }
+  });
+};
+
+export const removeOneSignalExternalUserId = () => {
+  OneSignal.removeExternalUserId((result) => {
+    if (result && result.push && result.push.success) {
+      console.log('Unsubscribing from notifications', result.push);
+      OneSignal.setSubscription(false);
+    }
+  });
 };

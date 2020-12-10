@@ -1,6 +1,11 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Dimensions, StyleSheet } from 'react-native';
 
+import {
+  INNER_CONTAINER_MARGIN_LEFT_RIGHT,
+  OUTER_CONTAINER_MARGIN_LEFT_RIGHT,
+} from '../../config/constants';
+
 const VIEW_WIDTH = Dimensions.get('window').width;
 
 export const exploreListItemStyles = EStyleSheet.create({
@@ -77,7 +82,10 @@ export const galleryListItemStyles = EStyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: VIEW_WIDTH - 64,
+    width:
+      VIEW_WIDTH -
+      OUTER_CONTAINER_MARGIN_LEFT_RIGHT -
+      INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     height: 170,
     backgroundColor: '$white',
   },
@@ -89,7 +97,10 @@ export const galleryListItemStyles = EStyleSheet.create({
     alignItems: 'center',
   },
   coverImage: {
-    width: VIEW_WIDTH - 64,
+    width:
+      VIEW_WIDTH -
+      OUTER_CONTAINER_MARGIN_LEFT_RIGHT -
+      INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     height: 170,
   },
   headerView: {

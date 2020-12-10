@@ -13,6 +13,8 @@ import {
   HIDE_POST_ERROR,
   HIDE_POSTS_BY_USER_RESULT,
   HIDE_POSTS_BY_USER_ERROR,
+  UPDATE_VIDEO_VIEWCOUNT_RESULT,
+  UPDATE_VIDEO_VIEWCOUNT_ERROR,
 } from '../actions/posts';
 import { API_HOST } from '../config/constants';
 
@@ -85,6 +87,19 @@ const fetchHidePostsByUser = ({ action, token }) =>
     },
     body: JSON.stringify({
       hiddenUserId: action.userId,
+    }),
+  });
+
+const fetchUpdateVideoViewCount = ({ action, token }) =>
+  fetch(`${API_HOST}/update-video-viewcount/`, {
+    method: 'post',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      parentId: action.parentId,
     }),
   });
 
@@ -299,5 +314,25 @@ export function* hidePostsByUser(action) {
     }
   } catch (e) {
     yield put({ type: HIDE_POSTS_BY_USER_ERROR, error: e.message });
+  }
+}
+
+export function* updateVideoViewCount(action) {
+  const token = yield select((state) => state.auth.authToken);
+
+  try {
+    const response = yield call(fetchUpdateVideoViewCount, { action, token });
+    const result = yield response.json();
+
+    if (result.error) {
+      if (result.type === 'INVALID_TOKEN') {
+        yield put({ type: 'INVALID_TOKEN' });
+      }
+      yield put({ type: UPDATE_VIDEO_VIEWCOUNT_ERROR, error: result.error });
+    } else {
+      yield put({ type: UPDATE_VIDEO_VIEWCOUNT_RESULT, result });
+    }
+  } catch (e) {
+    yield put({ type: UPDATE_VIDEO_VIEWCOUNT_ERROR, error: e.message });
   }
 }
