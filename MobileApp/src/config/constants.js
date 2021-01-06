@@ -1,7 +1,7 @@
 const DEVELOPMENT_API_HOST = 'http://localhost:4000';
-const PRODUCTION_API_HOST = 'https://yourwhip.herokuapp.com';
+const PRODUCTION_API_HOST = 'https://yourwhipnew01.herokuapp.com';
 
-const development = true;
+const development = false;
 
 export const API_HOST = development ?
   DEVELOPMENT_API_HOST : PRODUCTION_API_HOST;

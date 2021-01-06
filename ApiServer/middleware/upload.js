@@ -5,7 +5,7 @@ const CONFIG = require('../constants');
 
 cloudinary.config(CONFIG.CLOUDINARY);
 
-const upload = multer();
+const upload = multer({dest: 'uploads/'});
 
 exports.uploadProfileImage = upload.single('profileImage');
-exports.uploadImage = upload.array('media', 12);
+exports.uploadImage = upload.any();

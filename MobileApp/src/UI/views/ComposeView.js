@@ -47,7 +47,7 @@ const ComposeView = ({
             style={[styles.input, styles.inputTop]}
             placeholder={descriptionPlaceholder}
             textAlignVertical="top"
-            onChangeText={onDescriptionChange}
+            onChangeText={t => onDescriptionChange(t)}
             value={descriptionValue}
             multiline
           />
@@ -87,7 +87,7 @@ const ComposeView = ({
             <TextInput
               style={styles.input}
               placeholder={captionPlaceholder}
-              onChangeText={onCaptionChange}
+              onChangeText={t => onCaptionChange(t)}
               value={captionValue}
             />
           )}

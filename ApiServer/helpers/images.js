@@ -35,7 +35,8 @@ exports.saveImagesFromRequest = async (req) =>
 
     files.forEach(async (item) => {
       try {
-        cloudinaryUploader(
+          console.log(item.buffer);
+          cloudinaryUploader(
           user,
           item.buffer,
           { resolve, reject },

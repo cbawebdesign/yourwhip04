@@ -32,7 +32,7 @@ const fetchCompose = ({ data, token }) =>
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
-      'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'multipart/form-data',
     },
     body: data,
   });
@@ -130,19 +130,22 @@ export function* composePost(action) {
   if (action.data.media && action.data.media.images) {
     action.data.media.images.forEach((item) => {
       // CHECK FILE TYPES
-      const ext = item.file.uri.substr(item.file.uri.length - 3).toLowerCase();
+      const ext = item.localUri.split('.').pop().toLowerCase();
 
       if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
+        console.log('appending file');
         formData.append('media', {
           uri: item.file.uri,
           type: `image/${ext}`,
           name: 'media',
+          size: item.file.size
         });
       } else if (ext === 'mp4' || ext === 'mov') {
         formData.append('media', {
-          uri: item.localUri || item.file.uri,
+          uri: item.file.uri,
           type: 'video/mp4',
           name: 'media',
+          size: item.file.size
         });
       }
     });
@@ -155,6 +158,7 @@ export function* composePost(action) {
   }
 
   try {
+    console.log(formData);
     const response = yield call(fetchCompose, {
       data: formData,
       token,
@@ -195,19 +199,18 @@ export function* editPost(action) {
     action.data.media.images.forEach((item) => {
       if (item.file) {
         // CHECK FILE TYPES
-        const ext = item.file.uri
-          .substr(item.file.uri.length - 3)
+        const ext = item.localUri.split('.').pop()
           .toLowerCase();
 
         if (ext === 'jpg' || ext === 'jpeg' || ext === 'png') {
-          formData.append('media', {
+          formData.append('file', {
             uri: item.file.uri,
             type: `image/${ext}`,
             name: 'media',
           });
         } else if (ext === 'mp4' || ext === 'mov') {
-          formData.append('media', {
-            uri: item.localUri || item.file.uri,
+          formData.append('file', {
+            uri: item.file.uri,
             type: 'video/mp4',
             name: 'media',
           });
@@ -215,7 +218,7 @@ export function* editPost(action) {
       }
     });
   } else if (action.data.media && action.data.media.video) {
-    formData.append('media', {
+    formData.append('file', {
       uri: action.data.media.video.uri,
       type: 'video/mp4',
       name: 'media',

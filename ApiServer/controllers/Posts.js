@@ -118,7 +118,7 @@ exports.compose = async (req, res) => {
 
   let images;
   let sharedPost;
-
+  console.log(req);
   try {
     if (req.files.length > 0) {
       images = await imageHelper.saveImagesFromRequest(req);

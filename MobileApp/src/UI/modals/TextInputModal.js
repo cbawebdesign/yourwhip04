@@ -79,7 +79,7 @@ const TextInputModal = ({
                   style={[styles.input, multiline && styles.$multilineInput]}
                   placeholder={placeholder}
                   onChangeText={onChangeText}
-                  value={inputValue || null}
+                  value={inputValue || ''}
                   multiline={multiline}
                   textAlignVertical="top"
                 />

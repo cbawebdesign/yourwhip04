@@ -230,6 +230,7 @@ export const composeViewStyles = EStyleSheet.create({
     paddingTop: 25,
     paddingBottom: 25,
     fontSize: 16,
+    zIndex: 100, width: '100%'
   },
   mediaView: {
     alignSelf: 'center',
