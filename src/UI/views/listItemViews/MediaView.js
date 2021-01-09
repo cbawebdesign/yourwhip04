@@ -172,69 +172,56 @@ const MediaView = ({
   };
 
   return (
-    <View
-      // style={workingStyles.container}
-      style={styles.container}
-    >
-      <View
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'red',
-        }}
-      >
-        {remoteVideoUri || localVideoUri ? (
-          <TouchableWithoutFeedback
-            style={videoStyle}
-            onPress={() => {
-              if (paused) {
-                setPaused(false);
-              } else {
-                setPaused(true);
-              }
-            }}
-          >
-            <View
-              style={{ width: '100%', height: '100%', backgroundColor: 'blue' }}
-            >
-              <Video
-                source={{ uri: remoteVideoUri || localVideoUri }} // require('./broadchurch.mp4')}
-                //source={{uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}}
-                // source={require('sample-mp4-file.mp4')}
-                ref={videoRef}
-                style={videoStyle}
-                // controls={false}
-                // enableAutoPlay={false}
-                controls={true}
-                // rate={this.st aate.rate}
-                paused={paused}
-                volume={volume}
-                // muted={this.state.muted}
-                // ignoreSilentSwitch={this.state.ignoreSilentSwitch}x
-                // resizeMode={this.state.resizeMode}
-                // onLoad={(data ) => onLoad(data)}
-                // onBuffer={this.onBuffer}
-                // onProgress={this.onProgress}
-                // onEnd={() => { Alert.alert('Done!') }}
-                // repeat={true}
-                // controls={this.state.controls}
-                // filter={this.state.filter}
-                // filterEnabled={this.state.filterEnabled}
-                adTagUrl={adTagUrl}
-                onProgress={onProgress}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        ) : (
-          images.map((item, index) => {
-            if (index < 3) {
-              return renderImage(item, index);
+    <View style={styles.container}>
+      {remoteVideoUri || localVideoUri ? (
+        <TouchableWithoutFeedback
+          style={videoStyle}
+          onPress={() => {
+            if (paused) {
+              setPaused(false);
+            } else {
+              setPaused(true);
             }
+          }}
+        >
+          <View style={{ width: '100%', height: '100%' }}>
+            <Video
+              source={{ uri: remoteVideoUri || localVideoUri }} // require('./broadchurch.mp4')}
+              //source={{uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}}
+              // source={require('sample-mp4-file.mp4')}
+              ref={videoRef}
+              style={videoStyle}
+              // controls={false}
+              // enableAutoPlay={false}
+              controls={true}
+              // rate={this.st aate.rate}
+              paused={paused}
+              volume={volume}
+              // muted={this.state.muted}
+              // ignoreSilentSwitch={this.state.ignoreSilentSwitch}x
+              // resizeMode={this.state.resizeMode}
+              // onLoad={(data ) => onLoad(data)}
+              // onBuffer={this.onBuffer}
+              // onProgress={this.onProgress}
+              // onEnd={() => { Alert.alert('Done!') }}
+              // repeat={true}
+              // controls={this.state.controls}
+              // filter={this.state.filter}
+              // filterEnabled={this.state.filterEnabled}
+              adTagUrl={adTagUrl}
+              onProgress={onProgress}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      ) : (
+        images.map((item, index) => {
+          if (index < 3) {
+            return renderImage(item, index);
+          }
 
-            return null;
-          })
-        )}
-      </View>
+          return null;
+        })
+      )}
     </View>
   );
   //  <Video
