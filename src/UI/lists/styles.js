@@ -104,6 +104,10 @@ export const galleryListItemStyles = EStyleSheet.create({
     height: 170,
   },
   headerView: {
+    width:
+      VIEW_WIDTH -
+      OUTER_CONTAINER_MARGIN_LEFT_RIGHT -
+      INNER_CONTAINER_MARGIN_LEFT_RIGHT,
     position: 'absolute',
     top: 0,
     left: 0,

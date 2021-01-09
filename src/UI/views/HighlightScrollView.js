@@ -25,34 +25,41 @@ const HighlightScrollView = ({ onIndexChange, type, startDate }) => {
       });
     }
 
+    let periodCount = 0;
     return periodsList.map((item, i) =>
-      item.periods.map((month, j) => (
-        <View
-          key={`${item.year}-${month}`}
-          style={[
-            styles.scrollviewItemView,
-            { opacity: centerIndex === i * item.periods.length + j ? 1 : 0.1 },
-          ]}
-        >
-          <Text
-            text={month.substring(0, 3)}
-            fontFamily={TITLE_FONT}
-            style={styles.scrollviewPeriod}
-          />
-          {j === 0 && type !== 'day' && (
+      item.periods.map((month, j) => {
+        periodCount++;
+
+        return (
+          <View
+            key={`${item.year}-${month}`}
+            style={[
+              styles.scrollviewItemView,
+              {
+                opacity: centerIndex === periodCount - 1 ? 1 : 0.1,
+              },
+            ]}
+          >
             <Text
-              text={item.year}
+              text={month.substring(0, 3)}
               fontFamily={TITLE_FONT}
-              style={[
-                styles.scrollViewYear,
-                type === 'month' || type === 'day'
-                  ? styles.$typeMonth
-                  : styles.$typeWeek,
-              ]}
+              style={[styles.scrollviewPeriod]}
             />
-          )}
-        </View>
-      ))
+            {j === 0 && type !== 'day' && (
+              <Text
+                text={item.year}
+                fontFamily={TITLE_FONT}
+                style={[
+                  styles.scrollViewYear,
+                  type === 'month' || type === 'day'
+                    ? styles.$typeMonth
+                    : styles.$typeWeek,
+                ]}
+              />
+            )}
+          </View>
+        );
+      })
     );
   };
 
