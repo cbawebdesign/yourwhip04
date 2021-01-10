@@ -53,9 +53,16 @@ const Comments = ({
   const dispatch = useDispatch();
   const { keyboardShowing } = useKeyboardState();
 
-  const parentId = route.params.post
-    ? route.params.post._id
-    : route.params.image._id;
+  // COMMENT PARENT ID CAN BE PRIVIDED DIRECTLY FROM NOTIFICATION
+  // AS STRING OR FROM NAVIGATION FROM POST OR IMAGE SCREEN.
+  // FUNCTION CHECKS PARENTID SOURCE AND RETURNS ID STRING.
+  const getParentId = () => {
+    if (route.params.parentId) return route.params.parentId;
+    if (route.params.post) return route.params.post._id;
+    if (route.params.image) return route.params.image._id;
+    return '';
+  };
+  const parentId = getParentId();
 
   const [feed, setFeed] = useState([]);
   const [comment, setComment] = useState('');

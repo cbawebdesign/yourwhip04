@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { useDispatch, connect } from 'react-redux';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { debounce } from 'throttle-debounce';
@@ -559,10 +559,53 @@ const Explore = ({
 
   useEffect(() => {
     if (deepLinkSlug) {
-      navigation.navigate('ExploreDetail', {
-        ...route.params,
-        parentId: deepLinkSlug,
-      });
+      const idType = deepLinkSlug.substring(
+        deepLinkSlug.lastIndexOf('?'),
+        deepLinkSlug.lastIndexOf('&screen')
+      );
+      const screen = deepLinkSlug.substring(
+        deepLinkSlug.lastIndexOf('screen=') + 7,
+        deepLinkSlug.lastIndexOf('&')
+      );
+      const id = deepLinkSlug.split('id=')[
+        deepLinkSlug.split('id=').length - 1
+      ];
+
+      switch (screen) {
+        case 'post':
+          navigation.navigate('ExploreDetail', {
+            ...route.params,
+            parentId: id,
+          });
+          break;
+        case 'comments':
+          navigation.navigate('Comments', {
+            ...route.params,
+            type: 'POST',
+            parentId: id,
+          });
+          break;
+        case 'profile':
+          navigation.navigate('Profile', {
+            ...route.params,
+            parentId: id,
+          });
+          break;
+        case 'explore':
+          navigation.navigate('Explore', {
+            ...route.params,
+            parentId: id,
+          });
+          break;
+        case 'replies':
+          navigation.navigate('Replies', {
+            ...route.params,
+            comment: { _id: id },
+          });
+          break;
+        default:
+          break;
+      }
     }
 
     return () => {

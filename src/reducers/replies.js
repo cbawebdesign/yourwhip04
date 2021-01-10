@@ -14,6 +14,7 @@ const initialState = {
   error: null,
   success: null,
   fetching: false,
+  comment: null,
   replyFeed: [],
   updateReplyCheck: null,
 };
@@ -34,7 +35,8 @@ const replyState = (state = initialState, action) => {
       return {
         ...state,
         fetching: false,
-        replyFeed: action.result,
+        comment: action.result.comment,
+        replyFeed: action.result.replies,
         error: null,
       };
     case NEW_REPLY_RESULT:

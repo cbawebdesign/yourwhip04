@@ -208,6 +208,7 @@ export const listItemContainerViewStyles = EStyleSheet.create({
     justifyContent: 'space-between',
   },
   $replyBackground: '$backgroundGray',
+  $replyScreenWidth: VIEW_WIDTH - INNER_CONTAINER_MARGIN_LEFT_RIGHT - 24,
 
   container: {
     flex: 1,

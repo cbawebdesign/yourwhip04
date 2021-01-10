@@ -59,6 +59,7 @@ const ListItemContainerView = ({
             backgroundColor,
           },
           row && styles.$contentInRow,
+          (isComment || isReply) && { width: styles.$replyScreenWidth },
         ]}
       >
         {children}

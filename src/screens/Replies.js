@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FlatList, Keyboard } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { useDispatch, connect } from 'react-redux';
 import { AnimatedFlatList, AnimationType } from 'flatlist-intro-animations';
 
@@ -31,7 +31,14 @@ import styles from './styles';
 // navigation (to navigate to the Profile screen on pressing
 // the profile image)
 
-const Replies = ({ route, navigation, replyFeed, currentUser, fetching }) => {
+const Replies = ({
+  route,
+  navigation,
+  replyFeedComment,
+  replyFeed,
+  currentUser,
+  fetching,
+}) => {
   const dispatch = useDispatch();
   const { keyboardShowing } = useKeyboardState();
 
@@ -134,7 +141,7 @@ const Replies = ({ route, navigation, replyFeed, currentUser, fetching }) => {
 
   const renderHeaderComponent = () => (
     <CommentListItem
-      item={comment || route.params.comment}
+      item={comment}
       currentUser={currentUser}
       onLikePress={() => handleLikePress(route.params.post, 'COMMENT')}
       onReplyPress={() => null}
@@ -169,9 +176,17 @@ const Replies = ({ route, navigation, replyFeed, currentUser, fetching }) => {
   }, []);
 
   useEffect(() => {
-    setFeed(replyFeed);
-    setComment(route.params.comment);
-  }, [replyFeed]);
+    if (replyFeed) {
+      setFeed(replyFeed);
+    }
+    if (replyFeedComment) {
+      setComment(replyFeedComment || route.params.comment);
+    }
+  }, [replyFeed, replyFeedComment]);
+
+  if (!currentUser || !comment) {
+    return <View />;
+  }
 
   return (
     <ContainerView
@@ -240,11 +255,12 @@ Replies.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  const { replyFeed, fetching } = state.replies;
+  const { comment, replyFeed, fetching } = state.replies;
   const { user } = state.user;
 
   return {
     fetching,
+    replyFeedComment: comment,
     replyFeed,
     currentUser: user,
   };
