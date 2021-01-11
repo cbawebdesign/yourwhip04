@@ -92,12 +92,7 @@ const ExploreListItem = ({
       sharedItem.video !== undefined;
 
     return (
-      <View
-        style={[
-          styles.sharedPostView,
-          { marginTop: !hasDescription && isProfile ? -12 : 0 },
-        ]}
-      >
+      <View style={styles.sharedPostView}>
         <HeaderView
           profileImage={sharedItem.createdBy.profileImage}
           name={`${sharedItem.createdBy.firstName} ${sharedItem.createdBy.lastName}`}

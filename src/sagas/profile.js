@@ -10,7 +10,7 @@ import { API_HOST } from '../config/constants';
 
 const fetchProfile = ({ action, token }) =>
   fetch(
-    `${API_HOST}/get-profile/${action.user._id}/${action.skip}/${action.limit}`,
+    `${API_HOST}/get-profile/${action.userId}/${action.skip}/${action.limit}`,
     {
       method: 'get',
       headers: {

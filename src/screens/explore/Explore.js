@@ -588,7 +588,7 @@ const Explore = ({
         case 'profile':
           navigation.navigate('Profile', {
             ...route.params,
-            parentId: id,
+            userId: id,
           });
           break;
         case 'explore':
@@ -620,6 +620,8 @@ const Explore = ({
   if (!feed || !currentUser) {
     return <View />;
   }
+
+  console.log(route.params.headerHeight);
 
   return (
     <ContainerView

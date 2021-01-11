@@ -13,7 +13,7 @@ export const exploreListItemStyles = EStyleSheet.create({
 
   sharedPostView: {
     backgroundColor: '$white',
-    marginTop: 25,
+    marginTop: 0,
     shadowColor: 'black',
     shadowOffset: {
       width: 5,
@@ -21,9 +21,10 @@ export const exploreListItemStyles = EStyleSheet.create({
     },
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '$backgroundGray',
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
     elevation: 5,
+    zIndex: 999,
   },
   bodyTextView: {
     alignSelf: 'flex-start',

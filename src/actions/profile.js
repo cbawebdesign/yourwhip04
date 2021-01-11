@@ -6,9 +6,9 @@ export const FOLLOW_USER_PRESS = 'FOLLOW_USER_PRESS';
 export const FOLLOW_USER_PRESS_RESULT = 'FOLLOW_USER_PRESS_RESULT';
 export const FOLLOW_USER_PRESS_ERROR = 'FOLLOW_USER_PRESS_ERROR';
 
-export const getProfile = (user, skip, limit) => ({
+export const getProfile = (userId, skip, limit) => ({
   type: GET_PROFILE,
-  user,
+  userId,
   skip,
   limit,
 });

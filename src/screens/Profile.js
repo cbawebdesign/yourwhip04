@@ -61,10 +61,11 @@ const Profile = ({
   const paddingBottom = useSafeArea().bottom;
   const footerButtonRef = useRef(null);
 
+  const userId = route.params.userId || route.params.user._id;
   let following =
     currentUser &&
     currentUser.following.some(
-      (item) => item._id.toString() === route.params.user._id.toString()
+      (item) => item._id.toString() === userId.toString()
     );
 
   const [user, setUser] = useState(null);
@@ -299,7 +300,7 @@ const Profile = ({
 
   useEffect(() => {
     // PASS ROUTE TO MAKE SURE SCREEN UPDATES WHEN PROVIDED WITH NEW ROUTE PARAMS
-    dispatch(getProfile(route.params.user, 0, PAGINATION_LIMIT));
+    dispatch(getProfile(userId, 0, PAGINATION_LIMIT));
 
     return () => dispatch({ type: 'RESET_PROFILE' });
   }, [route]);

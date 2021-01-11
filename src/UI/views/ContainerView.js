@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -40,6 +41,12 @@ const ContainerView = ({
   const BG_COLOR = hasGradient
     ? [styles.$gradientColorFrom, styles.$gradientColorTo]
     : [backgroundColor, backgroundColor];
+
+  if (Platform.OS === 'android') {
+    StatusBar.setBarStyle('dark-content');
+    StatusBar.setTranslucent(true);
+    StatusBar.setBackgroundColor('transparent');
+  }
 
   if (!enableKeyboardAvoidingView) {
     return (
