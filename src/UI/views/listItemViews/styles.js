@@ -102,7 +102,6 @@ export const mediaViewStyles = EStyleSheet.create({
     ((VIEW_WIDTH - OUTER_CONTAINER_MARGIN_LEFT_RIGHT) / 3) * 2,
 
   container: {
-    flex: 1,
     flexWrap: 'wrap',
     height: '$singleLargeImageHeight',
     width: VIEW_WIDTH - OUTER_CONTAINER_MARGIN_LEFT_RIGHT,
