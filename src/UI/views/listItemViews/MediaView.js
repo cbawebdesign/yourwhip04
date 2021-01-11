@@ -5,6 +5,8 @@ import {
   Image,
   StyleSheet,
   TouchableWithoutFeedback,
+  Platform,
+  Dimensions,
 } from 'react-native';
 import Video from 'react-native-video';
 // import { Video } from 'expo-av';
@@ -18,11 +20,7 @@ import {
   libraryImagePropType,
   photoPropType,
 } from '../../../config/propTypes';
-import {
-  CustomText as Text,
-  TITLE_FONT,
-  BODY_FONT,
-} from '../../text/CustomText';
+import { CustomText as Text, TITLE_FONT } from '../../text/CustomText';
 
 // DISPLAYS THE POST'S IMAGES OR VIDEO
 // FOR EACH ITEM INSIDE THE EXPLORE SCREEN
@@ -44,6 +42,8 @@ const MediaView = ({
 }) => {
   let remoteVideoUri;
   let localVideoUri;
+
+  const VIEW_WIDTH = Dimensions.get('window').width;
 
   // const videoRef = createRef();
   const videoRef = ref;
@@ -159,8 +159,7 @@ const MediaView = ({
     console.log('loaded', data);
   }
   const videoStyle = {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     // controls: {
     //   backgroundColor: "transparent",
     //   borderRadius: 5,
@@ -184,7 +183,14 @@ const MediaView = ({
             }
           }}
         >
-          <View style={{ width: '100%', height: '100%' }}>
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              maxWidth: VIEW_WIDTH,
+              maxHeight: 300,
+            }}
+          >
             <Video
               source={{ uri: remoteVideoUri || localVideoUri }} // require('./broadchurch.mp4')}
               //source={{uri: 'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4'}}
@@ -193,7 +199,7 @@ const MediaView = ({
               style={videoStyle}
               // controls={false}
               // enableAutoPlay={false}
-              controls={true}
+              controls
               // rate={this.st aate.rate}
               paused={paused}
               volume={volume}
@@ -210,6 +216,7 @@ const MediaView = ({
               // filterEnabled={this.state.filterEnabled}
               adTagUrl={adTagUrl}
               onProgress={onProgress}
+              resizeMode="cover"
             />
           </View>
         </TouchableWithoutFeedback>

@@ -88,7 +88,7 @@ const Navigation = ({
         data={getData()}
         animationType={
           currentUser.settings.enableIntroAnimations
-            ? AnimationType.Dive
+            ? AnimationType.Fade
             : AnimationType.None
         }
         focused
