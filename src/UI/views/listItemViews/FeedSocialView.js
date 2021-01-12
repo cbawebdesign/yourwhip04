@@ -96,7 +96,7 @@ const FeedSocialView = ({
             <>
               <Image
                 source={likeIcon}
-                style={[styles.socialIcon, !item.isLiked && styles.$inactive]}
+                style={[styles.socialIcon, hasBeenLiked && styles.$active]}
               />
               <Text
                 text={item.likes.length}

@@ -8,6 +8,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import * as SecureStore from 'expo-secure-store';
 import branch from 'react-native-branch';
 import * as Linking from 'expo-linking';
+import { Image, View } from 'react-native';
 
 import { CustomText as Text, TITLE_FONT } from '../UI/text/CustomText';
 
@@ -83,13 +84,7 @@ import {
   FLAGGED,
 } from './constants';
 
-// APP APPLIES 5 SEPERATE NAVIGATION STACKS
-// 1) AuthNavigationStack (controls authentication screens)
-// 2) WalkthroughNavigationStack (controls Walkthrough screens)
-// 3) MainNavigationStack (controls all main app screens)
-// 4) AppNavigationStack (controls display of and navigation between
-// above three Navigation Stacks)
-// 5) RootNavigationStack (controls navigation to PopUp Screens)
+const headerImage = require('../../assets/images/capture-2.png');
 
 const AuthNavigationStack = createStackNavigator();
 const WalkthroughNavigationStack = createStackNavigator();
@@ -107,6 +102,11 @@ const styles = EStyleSheet.create({
     letterSpacing: 3,
     textTransform: 'uppercase',
     textAlign: 'center',
+  },
+  headerImage: {
+    alignItems: 'center',
+    height: 44,
+    resizeMode: 'contain',
   },
   subHeader: {
     fontSize: 12,
@@ -370,6 +370,7 @@ const RootStackScreen = ({ authToken, walkthroughComplete, currentUser }) => {
             headerTransparent: true,
             headerLeft: () => getHeaderLeftHelper(route, navigation),
             headerTitle: () => {
+              if (!getHeaderTitleHelper(route, navigation)) return null;
               if (getHeaderTitleHelper(route, navigation).view) {
                 return getHeaderTitleHelper(route, navigation).view;
               }
@@ -420,15 +421,7 @@ const RootStackScreen = ({ authToken, walkthroughComplete, currentUser }) => {
                   .view;
               }
 
-              return (
-                <Text
-                  text={
-                    getHeaderTitleHelper(route, navigation, currentUser).text
-                  }
-                  fontFamily={TITLE_FONT}
-                  style={styles.header}
-                />
-              );
+              return <Image source={headerImage} style={styles.headerImage} />;
             },
           })}
         />

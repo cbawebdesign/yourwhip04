@@ -621,8 +621,6 @@ const Explore = ({
     return <View />;
   }
 
-  console.log(route.params.headerHeight);
-
   return (
     <ContainerView
       touchEnabled={false}

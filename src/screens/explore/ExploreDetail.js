@@ -209,6 +209,7 @@ const ExploreDetail = ({
       onSharePress={() => handleSharePress(post, 'POST')}
       hideMediaView
       onOptionsPress={() => setShowPostOptions(true)}
+      // hideSocialView
     />
   );
 

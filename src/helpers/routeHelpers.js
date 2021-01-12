@@ -117,12 +117,10 @@ export const getHeaderTitleHelper = (route, navigation, currentUser = null) => {
       }
       return { text: '' };
     case COMPOSE:
-      return {
-        text: childStack && childStack.params.editPost ? 'Edit' : COMPOSE,
-      };
+      return null;
     case LOGIN:
     case CAMERA:
-      return { text: '' };
+      return null;
     case SIGNUP_STEP_2:
       if (stack && (stack.name === WALKTHROUGH || stack.name === 'Popup')) {
         return '';
@@ -181,25 +179,10 @@ export const getHeaderTitleHelper = (route, navigation, currentUser = null) => {
       };
     case NAVIGATION:
       return {
-        view: (
-          <>
-            <Text
-              text={NAVIGATION}
-              fontFamily={TITLE_FONT}
-              style={styles.header}
-            />
-            {currentUser && currentUser.isAdmin && (
-              <Text
-                text="Admin account"
-                fontFamily={BODY_FONT}
-                style={styles.subHeader}
-              />
-            )}
-          </>
-        ),
+        text: NAVIGATION,
       };
     case 'ImagePicker':
-      return { text: MEDIA_ALBUMS };
+      return null;
     case DISCOVER:
       return { text: WALKTHROUGH };
     case PROFILE:

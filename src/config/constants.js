@@ -6,8 +6,8 @@ export const CONTACT_EMAIL = 'info@yourwhip.com';
 
 // APISERVER URLS
 const DEVELOPMENT_API_HOST = 'http://localhost:4000';
-// const PRODUCTION_API_HOST = 'https://yourwhip.herokuapp.com';
-const PRODUCTION_API_HOST = 'https://test440yw.herokuapp.com';
+const PRODUCTION_API_HOST = 'https://yourwhip.herokuapp.com';
+// const PRODUCTION_API_HOST = 'https://test440yw.herokuapp.com';
 
 const development = false;
 
@@ -25,7 +25,7 @@ export const INNER_CONTAINER_MARGIN_LEFT_RIGHT = 0;
 export const PAGINATION_LIMIT = 8;
 
 // CHANGE SOCIAL BAR SETTINGS
-export const ENABLE_LIKE_ANIMATION_1 = false;
+export const ENABLE_LIKE_ANIMATION_1 = true;
 export const ENABLE_LIKE_ANIMATION_2 = false;
 
 // ENABLE USER'S ABILITY TO LIKE OWN POSTS /

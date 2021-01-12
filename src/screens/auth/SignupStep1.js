@@ -23,7 +23,7 @@ import { useKeyboardState } from '../../config/hooks';
 
 import styles from '../styles';
 
-const backgroundImage = require('../../../assets/images/background.png');
+const backgroundImage = require('../../../assets/images/porsche.png');
 
 const isIos = Platform.OS === 'ios';
 

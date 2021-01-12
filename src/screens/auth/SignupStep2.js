@@ -26,7 +26,7 @@ import { CAMERA, SIGNUP_STEP_2, SIGNUP_STEP_3 } from '../../config/constants';
 
 import styles from '../styles';
 
-const backgroundImage = require('../../../assets/images/background.png');
+const backgroundImage = require('../../../assets/images/porsche.png');
 const arrowRightIcon = require('../../../assets/icons/arrowRight.png');
 
 const getBirthdayValue = (birthdayValue) => {

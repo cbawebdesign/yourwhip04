@@ -37,7 +37,7 @@ export const logoViewStyles = EStyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    color: '$white',
+    color: '$primary1',
     fontSize: 24,
     letterSpacing: 20,
     lineHeight: 40,

@@ -42,6 +42,7 @@ const ExploreListItem = ({
   itemInView,
   onVideoProgress,
   videoViewCount,
+  hideSocialView,
 }) => {
   const opacity = new Animated.Value(1);
 
@@ -174,13 +175,15 @@ const ExploreListItem = ({
           />
         )}
 
-        <FeedSocialView
-          item={item}
-          currentUser={currentUser}
-          onCommentsPress={onCommentsPress}
-          onLikePress={onLikePress}
-          onSharePress={onSharePress}
-        />
+        {!hideSocialView && (
+          <FeedSocialView
+            item={item}
+            currentUser={currentUser}
+            onCommentsPress={onCommentsPress}
+            onLikePress={onLikePress}
+            onSharePress={onSharePress}
+          />
+        )}
       </ListItemContainerView>
     </Animated.View>
   );

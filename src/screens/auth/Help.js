@@ -13,7 +13,7 @@ import { requestCode, resetMessages } from '../../actions/auth';
 
 import styles from '../styles';
 
-const backgroundImage = require('../../../assets/images/background.png');
+const backgroundImage = require('../../../assets/images/porsche.png');
 
 const Help = ({ route, navigation, fetching, error, success }) => {
   const dispatch = useDispatch();
