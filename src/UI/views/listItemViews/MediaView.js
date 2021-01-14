@@ -33,6 +33,10 @@ import { CustomText as Text, TITLE_FONT } from '../../text/CustomText';
 const adTagUrl =
   'https://pubads.g.doubleclick.net/gampad/ads?slotname=/124319096/external/ad_rule_samples&sz=640x480&ciu_szs=300x250&cust_params=deployment%3Ddevsite%26sample_ar%3Dpremidpostpod&url=https://developers.google.com/interactive-media-ads/docs/sdks/html5/client-side/tags&unviewed_position_start=1&output=xml_vast3&impl=s&env=vp&gdfp_req=1&ad_rule=0&cue=15000&vad_type=linear&vpos=midroll&pod=2&mridx=1&rmridx=1&ppos=2&min_ad_duration=0&max_ad_duration=30000&vrid=6376&video_doc_id=short_onecue&cmsid=496&kfa=0&tfcd=0';
 
+const videoStyle = {
+  flex: 1,
+};
+
 const MediaView = ({
   media,
   caption,
@@ -158,17 +162,6 @@ const MediaView = ({
   function onLoad(data) {
     console.log('loaded', data);
   }
-  const videoStyle = {
-    flex: 1,
-    // controls: {
-    //   backgroundColor: "transparent",
-    //   borderRadius: 5,
-    //   position: 'absolute',
-    //   bottom: 44,
-    //   left: 4,
-    //   right: 4,
-    // },
-  };
 
   return (
     <View style={styles.container}>
@@ -201,7 +194,7 @@ const MediaView = ({
               // enableAutoPlay={false}
               controls
               // rate={this.st aate.rate}
-              paused={paused}
+              paused={!itemInView}
               volume={volume}
               // muted={this.state.muted}
               // ignoreSilentSwitch={this.state.ignoreSilentSwitch}x
@@ -214,9 +207,10 @@ const MediaView = ({
               // controls={this.state.controls}
               // filter={this.state.filter}
               // filterEnabled={this.state.filterEnabled}
-              adTagUrl={adTagUrl}
+              // adTagUrl={adTagUrl}
               onProgress={onProgress}
               resizeMode="cover"
+              repeat
             />
           </View>
         </TouchableWithoutFeedback>

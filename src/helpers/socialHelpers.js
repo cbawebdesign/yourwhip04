@@ -18,6 +18,13 @@ export const onLikePressHelper = (
     index = 0;
   }
 
+  // ON NEWLIKE CHECK EXPLORE SCREEN AFTER LIKE ACTION PROFILE SCREEN OR ELSEWHERE:
+  // IF ITEM NOT YET PRESENT ON FEED LIST DUE TO INFINITE LOADING
+  // SIMPLY RETURN EXISTING LIST WITHOUT UPDATING VALUES
+  if (index === -1) {
+    return feedCopy;
+  }
+
   if (
     feedCopy[index].likes.some((like) => like.createdBy.toString() === userId)
   ) {

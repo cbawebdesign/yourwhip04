@@ -559,10 +559,19 @@ const Explore = ({
 
   useEffect(() => {
     if (deepLinkSlug) {
-      const idType = deepLinkSlug.substring(
-        deepLinkSlug.lastIndexOf('?'),
-        deepLinkSlug.lastIndexOf('&screen')
-      );
+      // FROM FB SHARE
+      if (!deepLinkSlug.includes('screen')) {
+        console.log('slug', deepLinkSlug);
+
+        navigation.navigate('ExploreDetail', {
+          ...route.params,
+          parentId: deepLinkSlug,
+        });
+
+        return;
+      }
+
+      // ELSE FROM NOTIFICATION
       const screen = deepLinkSlug.substring(
         deepLinkSlug.lastIndexOf('screen=') + 7,
         deepLinkSlug.lastIndexOf('&')
