@@ -482,7 +482,7 @@ const Explore = ({
 
     // FETCH POSTS ON SCREEN LOAD
     // REFETCH AFTER CURRENTUSER EDITS PROFILE IMAGE
-    if (currentUser) {
+    if (currentUser && (!feed || feed.length === 0)) {
       dispatch(getHomeFeed(0, PAGINATION_LIMIT));
     }
 
@@ -561,8 +561,6 @@ const Explore = ({
     if (deepLinkSlug) {
       // FROM FB SHARE
       if (!deepLinkSlug.includes('screen')) {
-        console.log('slug', deepLinkSlug);
-
         navigation.navigate('ExploreDetail', {
           ...route.params,
           parentId: deepLinkSlug,
